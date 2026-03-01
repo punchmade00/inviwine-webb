@@ -1,367 +1,758 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>InviWine — Dashboard</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body { background: var(--bg); }
+    .page { display: none; }
+    .page.active { display: block; }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* PORTFOLIO VALUES */
+    .portfolio-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+    .portfolio-value { font-size: 48px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+    .portfolio-change { font-size: 15px; font-weight: 600; margin-top: 6px; }
+    .portfolio-sub { font-size: 13px; color: var(--text-3); margin-top: 2px; }
 
-:root {
-  --bg: #0A0A0A;
-  --bg-2: #111111;
-  --bg-3: #181818;
-  --bg-4: #222222;
-  --border: #2A2A2A;
-  --border-2: #333333;
-  --gold: #C9A84C;
-  --gold-hover: #D4B660;
-  --gold-subtle: rgba(201,168,76,0.08);
-  --gold-border: rgba(201,168,76,0.25);
-  --text: #FFFFFF;
-  --text-2: #A0A0A0;
-  --text-3: #555555;
-  --green: #22C55E;
-  --green-subtle: rgba(34,197,94,0.1);
-  --red: #EF4444;
-  --red-subtle: rgba(239,68,68,0.1);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
-  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* CHART CARD */
+    .chart-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+    .chart-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+    .chart-tab { font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 6px; border: none; background: transparent; color: var(--text-3); cursor: pointer; transition: all 0.2s; }
+    .chart-tab.active { background: var(--bg-4); color: var(--text); }
+    .chart-tab:hover:not(.active) { color: var(--text-2); }
+    #portfolioChart { width: 100%; height: 180px; display: block; }
+
+    /* DONUT */
+    .donut-row { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }
+    .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+    .donut-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .donut-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .donut-label { flex: 1; color: var(--text-2); }
+    .donut-pct { font-weight: 600; color: var(--text); }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 60px 24px; }
+    .empty-icon { font-size: 40px; margin-bottom: 16px; }
+    .empty-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .empty-desc { font-size: 14px; color: var(--text-2); max-width: 320px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* ADD BOTTLE MODAL */
+    .modal-step { display: none; }
+    .modal-step.active { display: block; }
+    .wine-option { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; }
+    .wine-option:hover { background: var(--bg-3); }
+    .wine-option-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .wine-option-name { font-size: 14px; font-weight: 600; }
+    .wine-option-meta { font-size: 12px; color: var(--text-3); }
+    .wine-option-price { font-size: 13px; font-weight: 600; margin-left: auto; }
+    #wineSearchResults { max-height: 280px; overflow-y: auto; margin-top: 8px; }
+
+    /* MARKET PAGE */
+    .market-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+    /* DETAIL MODAL */
+    .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .detail-price { font-size: 40px; font-weight: 800; letter-spacing: -1.5px; }
+    .detail-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 20px 0; }
+    .detail-stat { background: var(--bg-3); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+    .detail-stat-val { font-size: 18px; font-weight: 700; }
+    .detail-stat-lbl { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+    /* PREMIUM SECTION */
+    .premium-features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .prem-feat { background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .prem-feat-icon { font-size: 24px; margin-bottom: 10px; }
+    .prem-feat-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .prem-feat-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+    /* SIDEBAR MOBILE TOGGLE */
+    .mobile-menu-btn {
+      display: none; position: fixed; bottom: 20px; right: 20px;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--gold); color: #000;
+      font-size: 22px; border: none; cursor: pointer; z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    @media (max-width: 768px) {
+      .mobile-menu-btn { display: flex; }
+    }
+
+    /* BOTTLE CARDS */
+    .bottle-grid { display: flex; flex-direction: column; gap: 8px; }
+    .bottle-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 16px; transition: border-color 0.2s; }
+    .bottle-card:hover { border-color: var(--border-2); }
+    .bottle-region { width: 4px; height: 40px; border-radius: 2px; flex-shrink: 0; }
+    .bottle-info { flex: 1; min-width: 0; }
+    .bottle-name { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bottle-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+    .bottle-stats { display: flex; gap: 24px; }
+    .bottle-stat { text-align: right; }
+    .bottle-stat-val { font-size: 15px; font-weight: 700; }
+    .bottle-stat-lbl { font-size: 11px; color: var(--text-3); }
+    .bottle-delete { padding: 8px; color: var(--text-3); background: none; border: none; cursor: pointer; border-radius: 6px; font-size: 16px; transition: color 0.2s, background 0.2s; }
+    .bottle-delete:hover { color: var(--red); background: var(--red-subtle); }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div style="padding:0 20px 24px;border-bottom:1px solid var(--border)">
+      <a href="index.html" style="font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--text)">
+        <span class="nav-logo-dot"></span>InviWine
+      </a>
+    </div>
+    <nav class="sidebar-nav" style="padding-top:12px">
+      <div class="sidebar-item active" onclick="showPage('portfolio',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Portfolio
+      </div>
+      <div class="sidebar-item" onclick="showPage('cave',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 3h6l1 5H8L9 3z"/><path d="M8 8v10a2 2 0 002 2h4a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        Ma Cave
+      </div>
+      <div class="sidebar-item" onclick="showPage('market',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        Marché
+      </div>
+      <div class="sidebar-item" onclick="showPage('premium',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+        Premium
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user" onclick="handleSignOut()">
+        <div class="sidebar-avatar" id="userAvatar">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="userName">Chargement…</div>
+          <div class="sidebar-user-plan" id="userPlan">Compte gratuit</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- ---- PORTFOLIO PAGE ---- -->
+    <div class="page active" id="page-portfolio">
+      <div class="portfolio-header">
+        <div>
+          <div style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:8px">Valeur totale du portefeuille</div>
+          <div class="portfolio-value" id="totalValue">€0</div>
+          <div class="portfolio-change up" id="totalChange">—</div>
+          <div class="portfolio-sub" id="totalInvested">—</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddModal()">+ Ajouter une bouteille</button>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row" style="margin-bottom:24px">
+        <div class="stat-card">
+          <div class="stat-card-label">Bouteilles</div>
+          <div class="stat-card-value" id="statBottles">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Positions</div>
+          <div class="stat-card-value" id="statPositions">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">ROI global</div>
+          <div class="stat-card-value" id="statRoi">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Investi</div>
+          <div class="stat-card-value" id="statInvested">—</div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div class="chart-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:14px;font-weight:600;color:var(--text-2)">Évolution de la valeur</div>
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="setChartRange('1M',this)">1M</button>
+            <button class="chart-tab" onclick="setChartRange('6M',this)">6M</button>
+            <button class="chart-tab" onclick="setChartRange('1A',this)">1A</button>
+          </div>
+        </div>
+        <svg id="portfolioChart"></svg>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <!-- REGION BREAKDOWN -->
+        <div class="card">
+          <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.5px;font-size:11px">Répartition par région</div>
+          <div class="donut-row" id="regionChart">
+            <div style="color:var(--text-3);font-size:13px">Ajoutez des bouteilles pour voir la répartition.</div>
+          </div>
+        </div>
+        <!-- TOP PERFORMERS -->
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:var(--text-2);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.5px">Top performers</div>
+          <div id="topPerformers">
+            <div style="color:var(--text-3);font-size:13px">Aucune position pour l'instant.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- CAVE PAGE ---- -->
+    <div class="page" id="page-cave">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1 style="font-size:24px;font-weight:800;letter-spacing:-0.5px">Ma Cave</h1>
+          <p style="font-size:14px;color:var(--text-3);margin-top:4px" id="caveSubtitle">Chargement…</p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddModal()">+ Ajouter une bouteille</button>
+      </div>
+      <div class="search-wrap" style="margin-bottom:16px">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="form-input search-input" placeholder="Rechercher une bouteille…" id="caveSearch" oninput="renderCave()" />
+      </div>
+      <div class="bottle-grid" id="bottleList"></div>
+    </div>
+
+    <!-- ---- MARKET PAGE ---- -->
+    <div class="page" id="page-market">
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:24px;font-weight:800;letter-spacing:-0.5px">Marché</h1>
+        <p style="font-size:14px;color:var(--text-3);margin-top:4px">200+ références Liv-ex</p>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+        <div class="market-filters" id="marketFilters">
+          <button class="btn btn-secondary" onclick="setMarketFilter('all',this)" style="font-size:13px;padding:7px 14px">Tous</button>
+          <button class="btn btn-ghost" onclick="setMarketFilter('Bordeaux',this)" style="font-size:13px;padding:7px 14px">Bordeaux</button>
+          <button class="btn btn-ghost" onclick="setMarketFilter('Bourgogne',this)" style="font-size:13px;padding:7px 14px">Bourgogne</button>
+          <button class="btn btn-ghost" onclick="setMarketFilter('Rhône',this)" style="font-size:13px;padding:7px 14px">Rhône</button>
+          <button class="btn btn-ghost" onclick="setMarketFilter('Champagne',this)" style="font-size:13px;padding:7px 14px">Champagne</button>
+          <button class="btn btn-ghost" onclick="setMarketFilter('Italie',this)" style="font-size:13px;padding:7px 14px">Italie</button>
+          <button class="btn btn-ghost" onclick="setMarketFilter('Napa',this)" style="font-size:13px;padding:7px 14px">Napa</button>
+        </div>
+        <div class="search-wrap" style="width:220px">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="form-input search-input" placeholder="Rechercher…" id="marketSearch" oninput="renderMarket()" style="font-size:13px;padding:8px 8px 8px 36px"/>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>VIN</th><th>MILLÉSIME</th><th>TENDANCE</th>
+              <th>PRIX / BTL</th><th>1 MOIS</th><th>12 MOIS</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="marketBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---- PREMIUM PAGE ---- -->
+    <div class="page" id="page-premium">
+      <div style="max-width:640px">
+        <h1 style="font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px">Passez Premium</h1>
+        <p style="font-size:16px;color:var(--text-2);margin-bottom:36px">Déverrouillez les outils analytiques des investisseurs professionnels.</p>
+
+        <div class="premium-features" style="margin-bottom:36px">
+          <div class="prem-feat"><div class="prem-feat-icon">🗺️</div><div class="prem-feat-title">Heatmap millésimes</div><div class="prem-feat-desc">Carte thermique qualité × performance pour identifier les millésimes sous-évalués.</div></div>
+          <div class="prem-feat"><div class="prem-feat-icon">📈</div><div class="prem-feat-title">Projection 5 ans</div><div class="prem-feat-desc">Modèle prédictif basé sur les tendances Liv-ex et les scores critiques.</div></div>
+          <div class="prem-feat"><div class="prem-feat-icon">⚖️</div><div class="prem-feat-title">Allocation optimale</div><div class="prem-feat-desc">Algorithme Markowitz adapté au vin. Répartition idéale risque/rendement.</div></div>
+          <div class="prem-feat"><div class="prem-feat-icon">📄</div><div class="prem-feat-title">Rapport PDF mensuel</div><div class="prem-feat-desc">Document personnalisé avec performances et recommandations.</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+          <div class="card" style="cursor:pointer" onclick="subscribePlan('monthly')">
+            <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:12px">MENSUEL</div>
+            <div style="font-size:36px;font-weight:800;letter-spacing:-1px">€29<span style="font-size:16px;font-weight:500">,99</span></div>
+            <div style="font-size:12px;color:var(--text-3);margin:6px 0 16px">par mois</div>
+            <div class="btn btn-secondary btn-full" style="font-size:13px">Choisir</div>
+          </div>
+          <div class="card" style="cursor:pointer;border-color:var(--gold-border);background:linear-gradient(135deg,rgba(201,168,76,0.05),var(--bg-2))" onclick="subscribePlan('annual')">
+            <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">ANNUEL · <span style="color:var(--green)">−44%</span></div>
+            <div style="font-size:36px;font-weight:800;letter-spacing:-1px">€199<span style="font-size:16px;font-weight:500">,99</span></div>
+            <div style="font-size:12px;color:var(--text-3);margin:6px 0 16px">par an · €16,67/mois</div>
+            <div class="btn btn-primary btn-full" style="font-size:13px">Choisir →</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-3);text-align:center">Paiement sécurisé par Stripe · Annulation à tout moment</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ADD BOTTLE MODAL -->
+<div class="modal-overlay" id="addModal" style="display:none" onclick="closeAddModal(event)">
+  <div class="modal" onclick="e=>e.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h2 class="modal-title" style="margin-bottom:0">Ajouter une bouteille</h2>
+      <button onclick="closeAddModal()" style="background:none;border:none;color:var(--text-3);font-size:22px;cursor:pointer;line-height:1">×</button>
+    </div>
+
+    <!-- STEP 1: SEARCH WINE -->
+    <div class="modal-step active" id="step1">
+      <p class="modal-subtitle">Cherchez le vin dans notre catalogue</p>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="form-input search-input" type="text" placeholder="Pétrus, Romanée-Conti, Screaming Eagle…" id="wineSearchInput" oninput="searchWines()" />
+      </div>
+      <div id="wineSearchResults"></div>
+    </div>
+
+    <!-- STEP 2: DETAILS -->
+    <div class="modal-step" id="step2">
+      <div id="selectedWineInfo" style="background:var(--bg-3);border-radius:var(--radius-sm);padding:14px;margin-bottom:20px"></div>
+      <div class="form-group">
+        <label class="form-label">Quantité</label>
+        <input type="number" id="addQty" class="form-input" value="1" min="1" max="999"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Prix d'achat par bouteille (€)</label>
+        <input type="number" id="addPrice" class="form-input" placeholder="0.00" step="0.01"/>
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Date d'achat</label>
+        <input type="date" id="addDate" class="form-input"/>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-secondary" onclick="goStep(1)">← Retour</button>
+        <button class="btn btn-primary" style="flex:1" onclick="confirmAddBottle()">Ajouter au portfolio</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WINE DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" style="display:none" onclick="closeDetailModal(event)">
+  <div class="modal" style="max-width:540px" onclick="e=>e.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:4px" id="detailRegion"></div>
+        <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.5px" id="detailName"></h2>
+        <div style="font-size:14px;color:var(--text-3);margin-top:2px" id="detailMeta"></div>
+      </div>
+      <button onclick="closeDetailModal()" style="background:none;border:none;color:var(--text-3);font-size:22px;cursor:pointer;margin-left:16px">×</button>
+    </div>
+    <div style="margin:20px 0 0">
+      <div class="detail-price up" id="detailPrice"></div>
+      <div style="font-size:13px;color:var(--text-3);margin-top:4px">Prix actuel par bouteille</div>
+    </div>
+    <div class="detail-stats">
+      <div class="detail-stat"><div class="detail-stat-val" id="ds1m"></div><div class="detail-stat-lbl">1 mois</div></div>
+      <div class="detail-stat"><div class="detail-stat-val" id="ds6m"></div><div class="detail-stat-lbl">6 mois</div></div>
+      <div class="detail-stat"><div class="detail-stat-val" id="ds1y"></div><div class="detail-stat-lbl">12 mois</div></div>
+    </div>
+    <div style="background:var(--bg-3);border-radius:var(--radius);padding:16px;margin-bottom:20px">
+      <div class="chart-tabs" style="margin-bottom:12px" id="detailChartTabs">
+        <button class="chart-tab active" onclick="setDetailRange(1,this)">1M</button>
+        <button class="chart-tab" onclick="setDetailRange(6,this)">6M</button>
+        <button class="chart-tab" onclick="setDetailRange(12,this)">1A</button>
+      </div>
+      <svg id="detailChart" width="100%" height="120" style="display:block"></svg>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="addSelectedWine()">+ Ajouter à ma cave</button>
+  </div>
+</div>
+
+<button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<script src="js/core.js"></script>
+<script>
+let currentUser = null;
+let portfolio = [];
+let selectedWine = null;
+let marketFilter = 'all';
+
+// ---- INIT ----
+(async () => {
+  await IW.loadSupabase();
+  currentUser = await IW.guardAuth();
+  if (!currentUser) return;
+
+  const sb = window._sb;
+
+  // Load profile
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  const name = profile?.full_name || currentUser.email.split('@')[0];
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userAvatar').textContent = name[0].toUpperCase();
+  document.getElementById('userPlan').textContent = profile?.is_premium ? 'Premium ★' : 'Compte gratuit';
+
+  // Load portfolio
+  await loadPortfolio();
+  renderMarket();
+  renderPortfolioChart('1A');
+})();
+
+async function loadPortfolio() {
+  const sb = window._sb;
+  const { data } = await sb
+    .from('portfolio_bottles')
+    .select('*, wine:wines(*)')
+    .eq('user_id', currentUser.id);
+
+  portfolio = (data || []).map(b => ({
+    ...b,
+    current_value: (b.wine?.current_price || 0) * b.quantity,
+    roi: b.wine ? ((b.wine.current_price - b.purchase_price) / b.purchase_price) * 100 : 0
+  }));
+
+  renderPortfolio();
+  renderCave();
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+// ---- PORTFOLIO ----
+function renderPortfolio() {
+  const total = portfolio.reduce((s, b) => s + b.current_value, 0);
+  const invested = portfolio.reduce((s, b) => s + b.purchase_price * b.quantity, 0);
+  const roi = invested > 0 ? ((total - invested) / invested) * 100 : 0;
+  const bottles = portfolio.reduce((s, b) => s + b.quantity, 0);
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
+  document.getElementById('totalValue').textContent = IW.fmtEur(total);
+  document.getElementById('totalChange').textContent = (roi >= 0 ? '+' : '') + roi.toFixed(2) + '% depuis l\'achat';
+  document.getElementById('totalChange').className = 'portfolio-change ' + (roi >= 0 ? 'up' : 'down');
+  document.getElementById('totalInvested').textContent = `Total investi : ${IW.fmtEur(invested)}`;
+  document.getElementById('statBottles').textContent = bottles;
+  document.getElementById('statPositions').textContent = portfolio.length;
+  document.getElementById('statRoi').textContent = IW.fmtPct(roi);
+  document.getElementById('statRoi').className = 'stat-card-value ' + (roi >= 0 ? 'up' : 'down');
+  document.getElementById('statInvested').textContent = IW.fmtEur(invested);
 
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; border: none; outline: none; }
-input, textarea { font-family: inherit; outline: none; }
+  // Region donut
+  const regionMap = {};
+  portfolio.forEach(b => {
+    const r = b.wine?.region || 'Autres';
+    regionMap[r] = (regionMap[r] || 0) + b.current_value;
+  });
+  const regionData = Object.entries(regionMap);
+  const regionEl = document.getElementById('regionChart');
+  if (regionData.length === 0) {
+    regionEl.innerHTML = '<div style="color:var(--text-3);font-size:13px">Ajoutez des bouteilles pour voir la répartition.</div>';
+  } else {
+    const totalV = regionData.reduce((s, [, v]) => s + v, 0);
+    let donutHTML = `<svg width="100" height="100" viewBox="0 0 36 36">`;
+    let cumPct = 0;
+    const segments = regionData.map(([region, val]) => {
+      const pct = val / totalV * 100;
+      const color = IW.REGION_COLORS[region] || IW.REGION_COLORS.Autres;
+      const r = 15.915; const circ = 2 * Math.PI * r;
+      const dashLen = pct / 100 * circ;
+      const gapLen = circ - dashLen;
+      const rotation = -90 + cumPct * 3.6;
+      cumPct += pct;
+      return `<circle cx="18" cy="18" r="${r}" fill="none" stroke="${color}" stroke-width="3.5"
+        stroke-dasharray="${dashLen} ${gapLen}"
+        stroke-dashoffset="0"
+        transform="rotate(${rotation} 18 18)"/>`;
+    });
+    donutHTML += segments.join('') + '</svg>';
+    const legendHTML = regionData.slice(0, 5).map(([region, val]) => {
+      const pct = (val / totalV * 100).toFixed(0);
+      const color = IW.REGION_COLORS[region] || IW.REGION_COLORS.Altres;
+      return `<div class="donut-item">
+        <span class="donut-dot" style="background:${color}"></span>
+        <span class="donut-label">${region}</span>
+        <span class="donut-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    regionEl.innerHTML = `<div class="donut-row">${donutHTML}<div class="donut-legend">${legendHTML}</div></div>`;
+  }
 
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
-
-/* UTILITIES */
-.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
-.container-sm { max-width: 640px; margin: 0 auto; padding: 0 24px; }
-
-/* NAV */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  height: 64px;
-  display: flex; align-items: center;
-  border-bottom: 1px solid transparent;
-  transition: background var(--transition), border-color var(--transition);
-}
-.nav.scrolled {
-  background: rgba(10,10,10,0.85);
-  backdrop-filter: blur(24px);
-  border-color: var(--border);
-}
-.nav-inner {
-  width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.nav-logo {
-  font-size: 18px; font-weight: 700; letter-spacing: -0.5px;
-  color: var(--text);
-  display: flex; align-items: center; gap: 8px;
-}
-.nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
-.nav-links { display: flex; align-items: center; gap: 32px; }
-.nav-links a { font-size: 14px; color: var(--text-2); transition: color var(--transition); }
-.nav-links a:hover { color: var(--text); }
-.nav-actions { display: flex; align-items: center; gap: 12px; }
-.nav-signin {
-  font-size: 14px; font-weight: 500; color: var(--text-2);
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  transition: color var(--transition), background var(--transition);
-}
-.nav-signin:hover { color: var(--text); background: var(--bg-3); }
-.nav-signup {
-  font-size: 14px; font-weight: 600; color: #000;
-  background: var(--gold);
-  padding: 8px 18px;
-  border-radius: var(--radius-sm);
-  transition: background var(--transition);
-}
-.nav-signup:hover { background: var(--gold-hover); }
-
-/* BUTTONS */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-size: 14px; font-weight: 600;
-  padding: 12px 24px;
-  border-radius: var(--radius-sm);
-  transition: all var(--transition);
-  cursor: pointer; border: none;
-}
-.btn-primary { background: var(--gold); color: #000; }
-.btn-primary:hover { background: var(--gold-hover); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-secondary { background: var(--bg-3); color: var(--text); border: 1px solid var(--border-2); }
-.btn-secondary:hover { background: var(--bg-4); border-color: var(--border-2); }
-.btn-ghost { background: transparent; color: var(--text-2); }
-.btn-ghost:hover { color: var(--text); background: var(--bg-3); }
-.btn-lg { padding: 16px 32px; font-size: 15px; border-radius: var(--radius); }
-.btn-full { width: 100%; }
-.btn-loading { opacity: 0.7; pointer-events: none; }
-
-/* CARDS */
-.card {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  transition: border-color var(--transition);
-}
-.card:hover { border-color: var(--border-2); }
-
-/* BADGE */
-.badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-.badge-green { background: var(--green-subtle); color: var(--green); }
-.badge-gold { background: var(--gold-subtle); color: var(--gold); border: 1px solid var(--gold-border); }
-.badge-neutral { background: var(--bg-3); color: var(--text-2); }
-
-/* PILL LIVE */
-.live-pill::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%; background: var(--green);
-  animation: livePulse 1.5s ease infinite;
-}
-@keyframes livePulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  // Top performers
+  const topEl = document.getElementById('topPerformers');
+  if (portfolio.length === 0) {
+    topEl.innerHTML = '<div style="color:var(--text-3);font-size:13px">Aucune position pour l\'instant.</div>';
+  } else {
+    const sorted = [...portfolio].sort((a, b) => (b.roi||0) - (a.roi||0)).slice(0, 4);
+    topEl.innerHTML = sorted.map((b, i) => `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);${i===sorted.length-1?'border:none':''}">
+        <span style="font-size:11px;font-weight:700;color:var(--text-3);width:16px">${i+1}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.wine?.name || '—'}</div>
+          <div style="font-size:11px;color:var(--text-3)">${b.wine?.vintage} · ${b.wine?.region}</div>
+        </div>
+        <span class="${(b.roi||0) >= 0 ? 'up' : 'down'}" style="font-weight:700;font-size:13px">${IW.fmtPct(b.roi)}</span>
+      </div>
+    `).join('');
+  }
 }
 
-/* FORM ELEMENTS */
-.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-.form-label { font-size: 13px; font-weight: 500; color: var(--text-2); }
-.form-input {
-  width: 100%;
-  background: var(--bg-3);
-  border: 1px solid var(--border-2);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  font-size: 14px; color: var(--text);
-  transition: border-color var(--transition), box-shadow var(--transition);
-}
-.form-input:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-}
-.form-input::placeholder { color: var(--text-3); }
-.form-error { font-size: 12px; color: var(--red); margin-top: 4px; }
-.form-divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 20px 0;
-  color: var(--text-3); font-size: 13px;
-}
-.form-divider::before, .form-divider::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
+function renderPortfolioChart(range) {
+  const svg = document.getElementById('portfolioChart');
+  const baseVal = portfolio.reduce((s, b) => s + b.purchase_price * b.quantity, 0) || 50000;
+  const n = range === '1M' ? 30 : range === '6M' ? 24 : 52;
+  const growth = 0.18;
+  const data = Array.from({length: n}, (_, i) => ({
+    price: baseVal * (1 + (growth / n) * i + (Math.random() - 0.5) * 0.02)
+  }));
+  requestAnimationFrame(() => IW.drawLineChart(svg, data));
 }
 
-/* TOAST */
-.toast-container {
-  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-  display: flex; flex-direction: column; gap: 8px;
+function setChartRange(r, btn) {
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderPortfolioChart(r);
 }
-.toast {
-  display: flex; align-items: center; gap: 12px;
-  background: var(--bg-3);
-  border: 1px solid var(--border-2);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  font-size: 14px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 280px; max-width: 380px;
+
+// ---- CAVE ----
+function renderCave() {
+  const q = (document.getElementById('caveSearch')?.value || '').toLowerCase();
+  const filtered = portfolio.filter(b =>
+    `${b.wine?.name} ${b.wine?.producer}`.toLowerCase().includes(q)
+  );
+  document.getElementById('caveSubtitle').textContent = `${portfolio.length} position${portfolio.length !== 1 ? 's' : ''} · ${portfolio.reduce((s,b) => s+b.quantity,0)} bouteilles`;
+
+  const el = document.getElementById('bottleList');
+  if (filtered.length === 0) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🍷</div>
+      <div class="empty-title">Cave vide</div>
+      <div class="empty-desc">Ajoutez vos premières bouteilles pour commencer à suivre votre portfolio vinicole.</div>
+      <button class="btn btn-primary" onclick="openAddModal()">+ Ajouter une bouteille</button>
+    </div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(b => {
+    const color = IW.REGION_COLORS[b.wine?.region] || IW.REGION_COLORS.Autres;
+    const roi = b.roi || 0;
+    return `<div class="bottle-card">
+      <div class="bottle-region" style="background:${color}"></div>
+      <div class="bottle-info">
+        <div class="bottle-name">${b.wine?.name || '—'}</div>
+        <div class="bottle-meta">${b.wine?.vintage} · ${b.wine?.producer} · ${b.wine?.region}</div>
+      </div>
+      <div class="bottle-stats">
+        <div class="bottle-stat">
+          <div class="bottle-stat-val">${IW.fmtEur(b.current_value)}</div>
+          <div class="bottle-stat-lbl">Valeur</div>
+        </div>
+        <div class="bottle-stat">
+          <div class="bottle-stat-val">${b.quantity}</div>
+          <div class="bottle-stat-lbl">Qté</div>
+        </div>
+        <div class="bottle-stat">
+          <div class="bottle-stat-val ${roi >= 0 ? 'up' : 'down'}">${IW.fmtPct(roi)}</div>
+          <div class="bottle-stat-lbl">ROI</div>
+        </div>
+        <div class="bottle-stat">
+          <div class="bottle-stat-val">${IW.fmtEur(b.purchase_price)}</div>
+          <div class="bottle-stat-lbl">Achat/btl</div>
+        </div>
+      </div>
+      <button class="bottle-delete" onclick="deleteBottle('${b.id}')">×</button>
+    </div>`;
+  }).join('');
 }
-.toast.success { border-color: rgba(34,197,94,0.3); }
-.toast.error { border-color: rgba(239,68,68,0.3); }
-.toast-icon { font-size: 16px; }
-.toast-out { animation: toastOut 0.25s ease forwards; }
-@keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes toastOut { to { opacity: 0; transform: translateX(20px); } }
 
-/* MODAL */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 2000;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-  animation: fadeIn 0.2s ease;
+async function deleteBottle(id) {
+  if (!confirm('Retirer cette bouteille de votre cave ?')) return;
+  const sb = window._sb;
+  await sb.from('portfolio_bottles').delete().eq('id', id);
+  await loadPortfolio();
+  IW.showToast('Bouteille supprimée', 'success');
 }
-.modal {
-  background: var(--bg-2);
-  border: 1px solid var(--border-2);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  width: 100%; max-width: 440px;
-  animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// ---- MARKET ----
+function setMarketFilter(f, btn) {
+  marketFilter = f;
+  document.querySelectorAll('#marketFilters button').forEach(b => {
+    b.className = 'btn btn-ghost';
+    b.style.fontSize = '13px'; b.style.padding = '7px 14px';
+  });
+  btn.className = 'btn btn-secondary';
+  btn.style.fontSize = '13px'; btn.style.padding = '7px 14px';
+  renderMarket();
 }
-.modal-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
-.modal-subtitle { font-size: 14px; color: var(--text-2); margin-bottom: 28px; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-/* REVEAL ANIMATIONS */
-.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-.reveal.in { opacity: 1; transform: translateY(0); }
-.reveal-d1 { transition-delay: 0.1s; }
-.reveal-d2 { transition-delay: 0.2s; }
-.reveal-d3 { transition-delay: 0.3s; }
-.reveal-d4 { transition-delay: 0.4s; }
-
-/* SECTION LABELS */
-.section-label {
-  font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
-  color: var(--gold); text-transform: uppercase;
-  margin-bottom: 16px;
+function renderMarket() {
+  const q = (document.getElementById('marketSearch')?.value || '').toLowerCase();
+  const wines = IW.WINES.filter(w => {
+    const matchF = marketFilter === 'all' || w.region === marketFilter;
+    const matchQ = !q || `${w.name} ${w.producer} ${w.vintage}`.toLowerCase().includes(q);
+    return matchF && matchQ;
+  });
+  const tbody = document.getElementById('marketBody');
+  if (!tbody) return;
+  tbody.innerHTML = wines.map(w => {
+    const up = w.change_1y >= 0;
+    const color = IW.REGION_COLORS[w.region] || IW.REGION_COLORS.Autres;
+    const sid = `msp-${w.id}`;
+    return `<tr onclick="openDetail('${w.id}')" style="cursor:pointer">
+      <td>
+        <div style="display:flex;align-items:center;gap:0">
+          <span class="region-dot" style="background:${color}"></span>
+          <div>
+            <div style="font-weight:700;font-size:14px">${w.name}</div>
+            <div style="font-size:11px;color:var(--text-3)">${w.producer} · ${w.region}</div>
+          </div>
+        </div>
+      </td>
+      <td style="color:var(--text-2);font-size:13px">${w.vintage}</td>
+      <td><span id="${sid}" class="sparkline"></span></td>
+      <td style="font-weight:700;font-size:14px">${IW.fmtEur(w.current_price)}</td>
+      <td><span class="${up?'up':'down'}" style="font-weight:600;font-size:13px">${IW.fmtPct(w.change_1m)}</span></td>
+      <td><span class="${up?'up':'down'}" style="font-weight:700;font-size:14px">${IW.fmtPct(w.change_1y)}</span></td>
+      <td><button class="btn btn-ghost" style="font-size:12px;padding:6px 12px" onclick="event.stopPropagation();openDetail('${w.id}')">Détail</button></td>
+    </tr>`;
+  }).join('');
+  wines.forEach(w => {
+    const el = document.getElementById(`msp-${w.id}`);
+    if (el) IW.drawSparkline(el, w.spark, w.change_1y >= 0);
+  });
 }
-.section-title { font-size: clamp(32px, 5vw, 52px); font-weight: 700; letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px; }
-.section-desc { font-size: 16px; color: var(--text-2); line-height: 1.7; max-width: 520px; }
 
-/* CHANGE COLORS */
-.up { color: var(--green); }
-.down { color: var(--red); }
-
-/* DASHBOARD PAGE */
-.dashboard-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: 100vh;
+// ---- WINE DETAIL ----
+function openDetail(wineId) {
+  const wine = IW.WINES.find(w => w.id === wineId);
+  if (!wine) return;
+  selectedWine = wine;
+  document.getElementById('detailRegion').textContent = wine.region;
+  document.getElementById('detailName').textContent = wine.name;
+  document.getElementById('detailMeta').textContent = `${wine.vintage} · ${wine.producer}`;
+  document.getElementById('detailPrice').textContent = IW.fmtEur(wine.current_price);
+  document.getElementById('ds1m').textContent = IW.fmtPct(wine.change_1m);
+  document.getElementById('ds1m').className = 'detail-stat-val ' + (wine.change_1m >= 0 ? 'up' : 'down');
+  document.getElementById('ds6m').textContent = '—';
+  document.getElementById('ds1y').textContent = IW.fmtPct(wine.change_1y);
+  document.getElementById('ds1y').className = 'detail-stat-val ' + (wine.change_1y >= 0 ? 'up' : 'down');
+  setDetailRange(12, document.querySelector('#detailChartTabs .chart-tab'));
+  document.getElementById('detailModal').style.display = 'flex';
 }
-.sidebar {
-  background: var(--bg-2);
-  border-right: 1px solid var(--border);
-  padding: 80px 0 24px;
-  position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
-  display: flex; flex-direction: column;
-  z-index: 10;
+
+function setDetailRange(months, btn) {
+  if (btn) { document.querySelectorAll('#detailChartTabs .chart-tab').forEach(t => t.classList.remove('active')); btn.classList.add('active'); }
+  const wine = selectedWine;
+  if (!wine) return;
+  const n = months === 1 ? 30 : months === 6 ? 24 : 52;
+  const base = wine.current_price / (1 + wine.change_1y / 100);
+  const data = Array.from({length: n}, (_, i) => ({
+    price: base * (1 + (wine.change_1y / 100 / n) * i + (Math.random() - 0.5) * 0.015)
+  }));
+  const svg = document.getElementById('detailChart');
+  IW.drawLineChart(svg, data, wine.change_1y >= 0 ? '#22C55E' : '#EF4444');
 }
-.sidebar-logo {
-  padding: 0 20px 32px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
-  font-size: 16px; font-weight: 700; color: var(--text);
-  display: flex; align-items: center; gap: 8px;
+
+function closeDetailModal(e) {
+  if (!e || e.target.id === 'detailModal') document.getElementById('detailModal').style.display = 'none';
 }
-.sidebar-nav { flex: 1; padding: 0 12px; }
-.sidebar-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 14px; font-weight: 500; color: var(--text-2);
-  transition: all var(--transition);
-  margin-bottom: 2px;
-  cursor: pointer;
+
+function addSelectedWine() {
+  document.getElementById('detailModal').style.display = 'none';
+  openAddModal(selectedWine);
 }
-.sidebar-item:hover { background: var(--bg-3); color: var(--text); }
-.sidebar-item.active { background: var(--gold-subtle); color: var(--gold); border: 1px solid var(--gold-border); }
-.sidebar-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-.sidebar-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
-.sidebar-user {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background var(--transition);
+
+// ---- ADD BOTTLE ----
+function openAddModal(wine) {
+  document.getElementById('addModal').style.display = 'flex';
+  document.getElementById('wineSearchInput').value = '';
+  document.getElementById('wineSearchResults').innerHTML = '';
+  if (wine) {
+    selectWineForAdd(wine);
+  } else {
+    goStep(1);
+  }
 }
-.sidebar-user:hover { background: var(--bg-3); }
-.sidebar-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--gold-subtle);
-  border: 1px solid var(--gold-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 600; color: var(--gold);
-  flex-shrink: 0;
+
+function closeAddModal(e) {
+  if (!e || e.target.id === 'addModal') document.getElementById('addModal').style.display = 'none';
 }
-.sidebar-user-info { flex: 1; min-width: 0; }
-.sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sidebar-user-plan { font-size: 11px; color: var(--text-3); }
 
-.main-content { margin-left: 240px; padding: 88px 32px 48px; min-height: 100vh; }
-
-/* STATS CARDS */
-.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
-.stat-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-.stat-card-label { font-size: 12px; font-weight: 500; color: var(--text-3); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
-.stat-card-value { font-size: 28px; font-weight: 700; letter-spacing: -1px; color: var(--text); }
-.stat-card-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; }
-.stat-card-change { font-size: 13px; font-weight: 600; margin-top: 6px; }
-
-/* CHART */
-.chart-container { position: relative; }
-
-/* TABLE */
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th {
-  text-align: left; padding: 10px 16px;
-  font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-  color: var(--text-3);
-  border-bottom: 1px solid var(--border);
+function goStep(n) {
+  document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step${n}`).classList.add('active');
 }
-.data-table th:not(:first-child) { text-align: right; }
-.data-table td { padding: 14px 16px; border-bottom: 1px solid rgba(42,42,42,0.5); vertical-align: middle; }
-.data-table td:not(:first-child) { text-align: right; }
-.data-table tbody tr { transition: background var(--transition); }
-.data-table tbody tr:hover { background: var(--bg-3); }
-.data-table tbody tr:last-child td { border-bottom: none; }
 
-/* SPARKLINE */
-.sparkline { display: inline-block; vertical-align: middle; }
-
-/* PREMIUM LOCK */
-.premium-lock {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 48px; text-align: center;
-  border: 1px dashed var(--border-2);
-  border-radius: var(--radius-lg);
-  gap: 16px;
+function searchWines() {
+  const q = document.getElementById('wineSearchInput').value.toLowerCase();
+  const res = document.getElementById('wineSearchResults');
+  if (!q) { res.innerHTML = ''; return; }
+  const matches = IW.WINES.filter(w => `${w.name} ${w.producer} ${w.vintage}`.toLowerCase().includes(q)).slice(0, 8);
+  res.innerHTML = matches.map(w => {
+    const color = IW.REGION_COLORS[w.region] || IW.REGION_COLORS.Autres;
+    return `<div class="wine-option" onclick="selectWineForAdd(IW.WINES.find(x=>x.id==='${w.id}'))">
+      <span class="wine-option-dot" style="background:${color}"></span>
+      <div style="flex:1">
+        <div class="wine-option-name">${w.name}</div>
+        <div class="wine-option-meta">${w.vintage} · ${w.region}</div>
+      </div>
+      <span class="wine-option-price">${IW.fmtEur(w.current_price)}</span>
+    </div>`;
+  }).join('');
 }
-.premium-lock-icon { font-size: 32px; }
-.premium-lock h3 { font-size: 18px; font-weight: 700; }
-.premium-lock p { font-size: 14px; color: var(--text-2); max-width: 320px; line-height: 1.6; }
 
-/* PAGE TABS */
-.page-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px; width: fit-content; }
-.page-tab { font-size: 13px; font-weight: 500; padding: 7px 16px; border-radius: var(--radius-sm); color: var(--text-2); cursor: pointer; transition: all var(--transition); }
-.page-tab.active { background: var(--bg-4); color: var(--text); }
-.page-tab:hover:not(.active) { color: var(--text); }
-
-/* SEARCH INPUT */
-.search-wrap { position: relative; }
-.search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--text-3); fill: none; stroke-width: 2; pointer-events: none; }
-.search-input { padding-left: 38px !important; }
-
-/* REGION DOT */
-.region-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
-
-/* SCROLLABLE TABLE WRAPPER */
-.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
-.table-wrap .data-table th:first-child, .table-wrap .data-table td:first-child { padding-left: 20px; }
-.table-wrap .data-table th:last-child, .table-wrap .data-table td:last-child { padding-right: 20px; }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .dashboard-layout { grid-template-columns: 1fr; }
-  .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
-  .sidebar.open { transform: translateX(0); }
-  .main-content { margin-left: 0; padding: 80px 16px 48px; }
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  .nav-links { display: none; }
+function selectWineForAdd(wine) {
+  selectedWine = wine;
+  const color = IW.REGION_COLORS[wine.region] || IW.REGION_COLORS.Autres;
+  document.getElementById('selectedWineInfo').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span>
+      <div>
+        <div style="font-weight:700;font-size:15px">${wine.name}</div>
+        <div style="font-size:12px;color:var(--text-3)">${wine.vintage} · ${wine.producer} · Prix marché : ${IW.fmtEur(wine.current_price)}</div>
+      </div>
+    </div>`;
+  document.getElementById('addPrice').value = wine.current_price;
+  document.getElementById('addDate').value = new Date().toISOString().split('T')[0];
+  goStep(2);
 }
+
+async function confirmAddBottle() {
+  if (!selectedWine || !currentUser) return;
+  const qty = parseInt(document.getElementById('addQty').value) || 1;
+  const price = parseFloat(document.getElementById('addPrice').value);
+  const date = document.getElementById('addDate').value;
+  if (!price || !date) { IW.showToast('Remplissez tous les champs', 'error'); return; }
+
+  const sb = window._sb;
+  const { error } = await sb.from('portfolio_bottles').insert({
+    user_id: currentUser.id,
+    wine_id: selectedWine.id,
+    quantity: qty,
+    purchase_price: price,
+    purchase_date: date,
+    notes: null
+  });
+
+  if (error) { IW.showToast('Erreur lors de l\'ajout: ' + error.message, 'error'); return; }
+
+  closeAddModal();
+  await loadPortfolio();
+  IW.showToast(`${selectedWine.name} ajouté à votre cave !`, 'success');
+}
+
+// ---- PREMIUM ----
+async function subscribePlan(plan) {
+  IW.showToast('Redirection vers Stripe…', 'info');
+  try {
+    const sb = window._sb;
+    const { data, error } = await sb.functions.invoke('create-checkout-session', {
+      body: { userId: currentUser.id, plan }
+    });
+    if (error || !data?.url) throw new Error('Impossible de créer la session de paiement.');
+    window.open(data.url, '_blank');
+  } catch(e) {
+    IW.showToast(e.message, 'error');
+  }
+}
+
+// ---- NAVIGATION ----
+function showPage(name, item) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  item.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+  if (name === 'portfolio') renderPortfolioChart('1A');
+  if (name === 'market') renderMarket();
+}
+
+async function handleSignOut() {
+  if (confirm('Se déconnecter ?')) await IW.signOut();
+}
+</script>
+</body>
+</html>
