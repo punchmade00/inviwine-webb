@@ -384,6 +384,7 @@ let marketFilter = 'all';
 
   // Load portfolio
   await loadPortfolio();
+  await loadWinesFromSupabase();
   renderMarket();
   renderPortfolioChart('1A');
 })();
@@ -554,6 +555,28 @@ async function deleteBottle(id) {
   await sb.from('portfolio_bottles').delete().eq('id', id);
   await loadPortfolio();
   IW.showToast('Bouteille supprimée', 'success');
+}
+
+// ---- FETCH WINES FROM SUPABASE ----
+async function loadWinesFromSupabase() {
+  const sb = window._sb;
+  try {
+    const { data } = await sb.from('wines').select('*').order('name');
+    if (data && data.length > 0) {
+      IW.WINES = data.map(w => ({
+        id: w.id,
+        name: w.name,
+        producer: w.producer || '',
+        region: w.region || 'Bordeaux',
+        vintage: w.vintage || 2018,
+        current_price: w.current_price || 0,
+        change_1m: w.change_1m !== null ? w.change_1m : 0,
+        change_1y: w.change_1y !== null ? w.change_1y : 0,
+        score: w.score !== null ? w.score : 0,
+        spark: [20,18,16,14,12,10,8,6,4,2,1,1]
+      }));
+    }
+  } catch(e) { console.warn('Could not fetch wines:', e); }
 }
 
 // ---- MARKET ----
