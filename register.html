@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>InviWine — Investissement vin</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 0 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; top: 20%; left: 50%; transform: translate(-50%,-50%);
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      color: var(--gold); background: var(--gold-subtle);
+      border: 1px solid var(--gold-border);
+      padding: 6px 14px; border-radius: 20px; margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: clamp(40px, 5.5vw, 68px);
+      font-weight: 800; letter-spacing: -2px;
+      line-height: 1.05; margin-bottom: 20px;
+    }
+    .hero-title span { color: var(--gold); }
+    .hero-desc {
+      font-size: 17px; color: var(--text-2);
+      line-height: 1.7; max-width: 480px; margin-bottom: 36px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-trust {
+      margin-top: 40px; display: flex; align-items: center; gap: 16px;
+      font-size: 12px; color: var(--text-3);
+    }
+    .hero-trust-item { display: flex; align-items: center; gap: 6px; }
+    .hero-trust svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2.5; }
+
+    /* MOCK APP */
+    .mock-app {
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    }
+    .mock-topbar {
+      background: var(--bg-3);
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mock-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .mock-body { padding: 20px; }
+    .mock-header-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .mock-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); }
+    .mock-value { font-size: 36px; font-weight: 700; letter-spacing: -1.5px; margin: 4px 0; }
+    .mock-change { font-size: 13px; font-weight: 600; color: var(--green); }
+    .mock-chart { margin: 16px 0; }
+    .mock-rows { display: flex; flex-direction: column; gap: 1px; }
+    .mock-row {
+      display: flex; align-items: center;
+      padding: 10px 12px;
+      background: var(--bg-3); border-radius: 8px;
+      gap: 10px;
+    }
+    .mock-row-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .mock-row-name { flex: 1; font-size: 13px; font-weight: 500; }
+    .mock-row-price { font-size: 13px; font-weight: 600; }
+    .mock-row-change { font-size: 11px; font-weight: 600; min-width: 54px; text-align: right; }
+    .mock-rows-gap { display: flex; flex-direction: column; gap: 4px; }
+
+    /* TICKER */
+    .ticker-wrap {
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 14px 0; overflow: hidden;
+      background: var(--bg-2);
+    }
+    .ticker-track { display: flex; animation: ticker 28s linear infinite; }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 16px;
+      padding: 0 32px; white-space: nowrap;
+      font-size: 13px; font-weight: 500;
+      border-right: 1px solid var(--border);
+    }
+    .ticker-name { color: var(--text-2); }
+    .ticker-price { color: var(--text); font-weight: 600; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* STATS */
+    .stats-section { padding: 80px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .stats-cell { background: var(--bg-2); padding: 32px 28px; }
+    .stats-num { font-size: 44px; font-weight: 800; letter-spacing: -2px; color: var(--text); line-height: 1; }
+    .stats-num span { color: var(--gold); }
+    .stats-lbl { font-size: 13px; color: var(--text-3); margin-top: 8px; }
+
+    /* FEATURES */
+    .features-section { padding: 80px 0; }
+    .features-header { text-align: center; margin-bottom: 64px; }
+    .features-header .section-desc { margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .feature-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .feature-card:hover { border-color: var(--border-2); transform: translateY(-4px); }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      background: var(--gold-subtle); border: 1px solid var(--gold-border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .feature-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+    /* MARKET PREVIEW */
+    .market-section { padding: 80px 0; }
+
+    /* PRICING */
+    .pricing-section { padding: 80px 0; }
+    .pricing-header { text-align: center; margin-bottom: 56px; }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 780px; margin: 0 auto; }
+    .pricing-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 36px;
+      position: relative; transition: border-color var(--transition);
+    }
+    .pricing-card.featured { border-color: var(--gold-border); background: linear-gradient(135deg, rgba(201,168,76,0.04), var(--bg-2)); }
+    .pricing-card.featured:hover { border-color: var(--gold); }
+    .pricing-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: #000;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      padding: 4px 16px; border-radius: 20px; white-space: nowrap;
+    }
+    .pricing-name { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
+    .pricing-amount { font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+    .pricing-amount sup { font-size: 20px; font-weight: 600; vertical-align: super; letter-spacing: 0; }
+    .pricing-period { font-size: 13px; color: var(--text-3); margin-top: 6px; margin-bottom: 28px; }
+    .pricing-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .pricing-feat { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); }
+    .pricing-check { color: var(--green); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+    /* TESTIMONIALS */
+    .testi-section { padding: 80px 0; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .testi-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; }
+    .testi-stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 16px; }
+    .testi-text { font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 20px; }
+    .testi-author { font-size: 13px; font-weight: 600; color: var(--text); }
+    .testi-role { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+    /* CTA */
+    .cta-section {
+      padding: 100px 0; text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .cta-inner { max-width: 580px; margin: 0 auto; }
+    .cta-section .section-title { margin-bottom: 16px; }
+    .cta-section p { color: var(--text-2); font-size: 16px; margin-bottom: 36px; }
+    .cta-note { font-size: 12px; color: var(--text-3); margin-top: 16px; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 60px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand-name { font-size: 18px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .footer-brand-name .nav-logo-dot { display: inline-block; }
+    .footer-brand-desc { font-size: 14px; color: var(--text-3); line-height: 1.7; max-width: 240px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 14px; color: var(--text-2); margin-bottom: 10px; transition: color var(--transition); }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid var(--border); }
+    .footer-copy { font-size: 12px; color: var(--text-3); }
+    .footer-disclaimer { font-size: 11px; color: var(--text-3); max-width: 440px; text-align: right; line-height: 1.5; }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .mock-app { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><span class="nav-logo-dot"></span>InviWine</a>
+    <div class="nav-links">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#market">Marché</a>
+      <a href="#pricing">Tarifs</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-signin">Se connecter</a>
+      <a href="register.html" class="nav-signup">Commencer</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow reveal">
+          <span class="live-pill"></span>200+ vins suivis en temps réel
+        </div>
+        <h1 class="hero-title reveal reveal-d1">
+          Investissez dans le vin<br>avec la précision<br><span>d'un terminal</span><br>financier
+        </h1>
+        <p class="hero-desc reveal reveal-d2">
+          InviWine centralise les données Liv-ex, le suivi de votre portefeuille et les outils d'analyse quantitative dans une interface moderne pensée pour les investisseurs sérieux.
+        </p>
+        <div class="hero-actions reveal reveal-d3">
+          <a href="register.html" class="btn btn-primary btn-lg">Créer un compte gratuit</a>
+          <a href="#market" class="btn btn-secondary btn-lg">Voir le marché</a>
+        </div>
+        <div class="hero-trust reveal reveal-d4">
+          <div class="hero-trust-item">
+            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            Gratuit pour commencer
+          </div>
+          <div class="hero-trust-item">
+            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            Données Liv-ex
+          </div>
+          <div class="hero-trust-item">
+            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            Sans engagement
+          </div>
+        </div>
+      </div>
+
+      <!-- MOCK APP -->
+      <div class="mock-app reveal reveal-d2">
+        <div class="mock-topbar">
+          <div class="mock-dot" style="background:#ff5f57"></div>
+          <div class="mock-dot" style="background:#ffbd2e"></div>
+          <div class="mock-dot" style="background:#28c840"></div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header-row">
+            <div>
+              <div class="mock-label">Valeur du portfolio</div>
+              <div class="mock-value">€247 840</div>
+              <div class="mock-change">↑ +18.4% sur 12 mois</div>
+            </div>
+            <span class="badge badge-green live-pill">LIVE</span>
+          </div>
+          <div class="mock-chart">
+            <svg id="mockChart" width="100%" height="80" viewBox="0 0 400 80" style="overflow:visible"></svg>
+          </div>
+          <div class="mock-rows-gap">
+            <div class="mock-row">
+              <div class="mock-row-dot" style="background:#C0392B"></div>
+              <div class="mock-row-name">Pétrus 2015</div>
+              <svg width="52" height="22"><path d="M0,18 C8,16 14,10 22,8 C30,6 36,12 44,4 C48,2 50,3 52,2" stroke="#22C55E" stroke-width="1.5" fill="none"/></svg>
+              <div class="mock-row-price">€3 800</div>
+              <div class="mock-row-change up">+35.8%</div>
+            </div>
+            <div class="mock-row">
+              <div class="mock-row-dot" style="background:#8E44AD"></div>
+              <div class="mock-row-name">Romanée-Conti 2019</div>
+              <svg width="52" height="22"><path d="M0,20 C10,17 16,13 24,9 C32,5 38,7 46,3 C49,1 51,2 52,1" stroke="#22C55E" stroke-width="1.5" fill="none"/></svg>
+              <div class="mock-row-price">€18 000</div>
+              <div class="mock-row-change up">+45.2%</div>
+            </div>
+            <div class="mock-row">
+              <div class="mock-row-dot" style="background:#2980B9"></div>
+              <div class="mock-row-name">Screaming Eagle 2018</div>
+              <svg width="52" height="22"><path d="M0,16 C8,18 14,20 22,16 C30,12 38,7 46,4 C49,3 51,3 52,2" stroke="#22C55E" stroke-width="1.5" fill="none"/></svg>
+              <div class="mock-row-price">€3 800</div>
+              <div class="mock-row-change up">+42.5%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stats-cell reveal"><div class="stats-num"><span>200</span>+</div><div class="stats-lbl">Vins suivis</div></div>
+      <div class="stats-cell reveal reveal-d1"><div class="stats-num"><span>25</span>k</div><div class="stats-lbl">Points de prix historiques</div></div>
+      <div class="stats-cell reveal reveal-d2"><div class="stats-num"><span>5</span> ans</div><div class="stats-lbl">D'historique de marché</div></div>
+      <div class="stats-cell reveal reveal-d3"><div class="stats-num"><span>Liv-ex</span></div><div class="stats-lbl">Source de données de référence</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="features-header">
+      <p class="section-label reveal">Fonctionnalités</p>
+      <h2 class="section-title reveal">Tous les outils d'un<br>investisseur professionnel</h2>
+      <p class="section-desc reveal">InviWine combine données de marché, gestion de portefeuille et analyses quantitatives dans une interface épurée.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg></div>
+        <div class="feature-title">Graphiques temps réel</div>
+        <div class="feature-desc">Courbes SVG lissées avec historique 1M / 6M / 1A / 5A. Visualisez l'évolution précise de chaque référence Liv-ex.</div>
+      </div>
+      <div class="feature-card reveal reveal-d1">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+        <div class="feature-title">Portfolio automatisé</div>
+        <div class="feature-desc">ROI par position, valeur totale actualisée, répartition par région. Votre cave vue comme un portefeuille financier.</div>
+      </div>
+      <div class="feature-card reveal reveal-d2">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+        <div class="feature-title">Index & classements</div>
+        <div class="feature-desc">Triez 200+ références par performance 1M, 12M, prix ou région. Identifiez les opportunités instantanément.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+        <div class="feature-title">Alertes prix</div>
+        <div class="feature-desc">Configurez des seuils d'alerte email par vin. Ne manquez plus aucun mouvement de marché significatif.</div>
+      </div>
+      <div class="feature-card reveal reveal-d1">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div class="feature-title">Heatmap millésimes</div>
+        <div class="feature-desc">Carte thermique interactive qualité × performance. Identifiez les millésimes sous-évalués avant le marché.</div>
+      </div>
+      <div class="feature-card reveal reveal-d2">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="feature-title">Rapport PDF mensuel</div>
+        <div class="feature-desc">Document personnalisé avec performances, analyses et recommandations spécifiques à votre portefeuille.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET PREVIEW -->
+<section class="market-section" id="market">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;gap:16px">
+      <div>
+        <p class="section-label reveal">Marché en direct</p>
+        <h2 class="section-title reveal" style="font-size:clamp(28px,4vw,42px)">Les grandes références</h2>
+      </div>
+      <div style="display:flex;gap:8px;" class="reveal">
+        <button class="btn btn-secondary" onclick="filterWines('all',this)" style="font-size:13px;padding:8px 16px;" id="f-all">Tous</button>
+        <button class="btn btn-ghost" onclick="filterWines('Bordeaux',this)" style="font-size:13px;padding:8px 16px;" id="f-Bordeaux">Bordeaux</button>
+        <button class="btn btn-ghost" onclick="filterWines('Bourgogne',this)" style="font-size:13px;padding:8px 16px;" id="f-Bourgogne">Bourgogne</button>
+        <button class="btn btn-ghost" onclick="filterWines('Napa',this)" style="font-size:13px;padding:8px 16px;" id="f-Napa">Napa</button>
+      </div>
+    </div>
+    <div class="table-wrap reveal">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>VIN</th>
+            <th>MILLÉSIME</th>
+            <th>TENDANCE 12M</th>
+            <th>PRIX / BTL</th>
+            <th>1 MOIS</th>
+            <th>12 MOIS</th>
+          </tr>
+        </thead>
+        <tbody id="marketTableBody"></tbody>
+      </table>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <a href="register.html" class="btn btn-secondary">Voir toutes les références →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="pricing-header">
+      <p class="section-label reveal">Tarifs</p>
+      <h2 class="section-title reveal">Simple et transparent</h2>
+      <p class="section-desc reveal" style="margin:0 auto">Commencez gratuitement, passez premium quand vous êtes prêt.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Gratuit</div>
+        <div class="pricing-amount"><sup>€</sup>0</div>
+        <div class="pricing-period">pour toujours</div>
+        <div class="pricing-features">
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Accès aux 200+ vins</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Suivi de portfolio</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Graphiques 1A</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Filtres et recherche</div>
+        </div>
+        <a href="register.html" class="btn btn-secondary btn-full">Commencer gratuitement</a>
+      </div>
+      <!-- Premium -->
+      <div class="pricing-card featured reveal reveal-d1">
+        <div class="pricing-badge">LE PLUS POPULAIRE</div>
+        <div class="pricing-name">Premium Annuel</div>
+        <div class="pricing-amount"><sup>€</sup>199<span style="font-size:24px;font-weight:500;letter-spacing:0">,99</span></div>
+        <div class="pricing-period">par an · soit €16,67/mois · <span style="color:var(--green)">−44%</span> vs mensuel</div>
+        <div class="pricing-features">
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Tout le plan gratuit</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Historique complet 5 ans</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Heatmap millésimes</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Projection de valeur 5 ans</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Allocation optimale</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Score de liquidité</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Rapport PDF mensuel</div>
+          <div class="pricing-feat"><span class="pricing-check">✓</span>Alertes prix illimitées</div>
+        </div>
+        <a href="register.html" class="btn btn-primary btn-full">Commencer l'essai →</a>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:var(--text-3);margin-top:20px">Paiement sécurisé par Stripe · Annulation à tout moment · Aucun frais caché</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-label reveal">Témoignages</p>
+      <h2 class="section-title reveal">Ce que disent nos investisseurs</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Enfin un outil qui parle le même langage que mes autres positions financières. Je gère ma cave comme un fond d'investissement."</div>
+        <div class="testi-author">Alexandre M.</div>
+        <div class="testi-role">Gestionnaire de patrimoine · Paris</div>
+      </div>
+      <div class="testi-card reveal reveal-d1">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"La projection de valeur m'a permis de revendre deux positions Bordeaux au bon moment. ROI réalisé : +38%. L'interface est parfaite."</div>
+        <div class="testi-author">Sophie K.</div>
+        <div class="testi-role">Investisseur particulier · Lyon</div>
+      </div>
+      <div class="testi-card reveal reveal-d2">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"L'interface rappelle Trade Republic ou Revolut. C'est exactement ce qui manquait dans le monde du vin d'investissement."</div>
+        <div class="testi-author">Thomas D.</div>
+        <div class="testi-role">Négociant en vins · Bordeaux</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner">
+      <p class="section-label reveal">Commencer maintenant</p>
+      <h2 class="section-title reveal">Votre cave mérite une analyse sérieuse</h2>
+      <p class="reveal">Rejoignez les investisseurs qui suivent leur portefeuille vinicole avec la précision d'un terminal financier.</p>
+      <div class="reveal">
+        <a href="register.html" class="btn btn-primary btn-lg">Créer mon compte gratuit →</a>
+      </div>
+      <p class="cta-note reveal">* Les données sont fournies à titre indicatif. InviWine ne constitue pas un conseil en investissement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name"><span class="nav-logo-dot"></span>InviWine</div>
+        <div class="footer-brand-desc">Le terminal financier du vin d'investissement. Données Liv-ex, analyses quantitatives, suivi de portefeuille.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Produit</h4>
+        <a href="#features">Fonctionnalités</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="#market">Marché</a>
+        <a href="dashboard.html">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Compte</h4>
+        <a href="login.html">Se connecter</a>
+        <a href="register.html">S'inscrire</a>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <a href="#">Mentions légales</a>
+        <a href="#">CGU</a>
+        <a href="#">Confidentialité</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 InviWine. Tous droits réservés.</span>
+      <span class="footer-disclaimer">Les performances passées ne préjugent pas des performances futures. L'investissement dans le vin comporte des risques de perte en capital.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/core.js"></script>
+<script>
+IW.initNavScroll();
+IW.initReveal();
+
+// TICKER
+const ticker = document.getElementById('ticker');
+const tickData = IW.WINES.slice(0, 10);
+const html = [...tickData, ...tickData].map(w =>
+  `<div class="ticker-item">
+    <span class="ticker-name">${w.name} ${w.vintage}</span>
+    <span class="ticker-price">${IW.fmtEur(w.current_price)}</span>
+    <span class="${w.change_1y >= 0 ? 'up' : 'down'}" style="font-weight:600;font-size:13px">${IW.fmtPct(w.change_1y)}</span>
+  </div>`
+).join('');
+ticker.innerHTML = html;
+
+// MOCK CHART
+(function() {
+  const pts = [62,58,56,60,54,48,44,50,40,32,24,18,10,5,2,1];
+  const n = pts.length, W = 400, H = 80, pad = 2;
+  const toX = i => pad + (i/(n-1))*(W-pad*2);
+  const toY = v => pad + (H-pad*2) - ((80-v)/80)*(H-pad*2);
+  let line = `M ${toX(0)} ${toY(pts[0])}`, area = line;
+  for (let i=1;i<n;i++){
+    const cpx=(toX(i-1)+toX(i))/2;
+    const seg=` C ${cpx} ${toY(pts[i-1])} ${cpx} ${toY(pts[i])} ${toX(i)} ${toY(pts[i])}`;
+    line+=seg; area+=seg;
+  }
+  area += ` L ${toX(n-1)} ${H} L ${toX(0)} ${H} Z`;
+  const svg = document.getElementById('mockChart');
+  svg.innerHTML = `<defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.25"/>
+    <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+  </linearGradient></defs>
+  <path d="${area}" fill="url(#mg)"/>
+  <path d="${line}" stroke="#C9A84C" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+})();
+
+// MARKET TABLE
+let currentFilter = 'all';
+function filterWines(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('[id^="f-"]').forEach(b => {
+    b.className = b.id === `f-${f}` || (f === 'all' && b.id === 'f-all') ? 'btn btn-secondary' : 'btn btn-ghost';
+    b.style.fontSize = '13px'; b.style.padding = '8px 16px';
+  });
+  renderMarket();
+}
+function renderMarket() {
+  const wines = currentFilter === 'all' ? IW.WINES : IW.WINES.filter(w => w.region === currentFilter);
+  const tbody = document.getElementById('marketTableBody');
+  tbody.innerHTML = wines.slice(0,8).map(w => {
+    const up = w.change_1y >= 0;
+    const color = IW.REGION_COLORS[w.region] || IW.REGION_COLORS.Autres;
+    const sparkId = `sp-${w.id}`;
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:0">
+          <span class="region-dot" style="background:${color}"></span>
+          <div>
+            <div style="font-weight:600;font-size:14px">${w.name}</div>
+            <div style="font-size:12px;color:var(--text-3)">${w.producer} · ${w.region}</div>
+          </div>
+        </div>
+      </td>
+      <td><span style="font-size:13px;color:var(--text-2)">${w.vintage}</span></td>
+      <td><span id="${sparkId}" class="sparkline"></span></td>
+      <td><span style="font-weight:600;font-size:14px">${IW.fmtEur(w.current_price)}</span></td>
+      <td><span class="${up?'up':'down'}" style="font-weight:600;font-size:13px">${IW.fmtPct(w.change_1m)}</span></td>
+      <td><span class="${up?'up':'down'}" style="font-weight:700;font-size:14px">${IW.fmtPct(w.change_1y)}</span></td>
+    </tr>`;
+  }).join('');
+  wines.slice(0,8).forEach(w => {
+    const el = document.getElementById(`sp-${w.id}`);
+    if (el) IW.drawSparkline(el, w.spark, w.change_1y >= 0);
+  });
+}
+renderMarket();
+</script>
+</body>
+</html>

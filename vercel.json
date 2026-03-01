@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>InviWine — Connexion</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-wrap { width: 100%; max-width: 420px; padding: 24px; }
+    .auth-logo { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+    .auth-title { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
+    .auth-sub { font-size: 14px; color: var(--text-2); margin-bottom: 32px; }
+    .auth-footer { text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-2); }
+    .auth-footer a { color: var(--gold); font-weight: 600; }
+    .auth-footer a:hover { text-decoration: underline; }
+    .forgot { font-size: 13px; color: var(--text-3); text-align: right; margin-top: -8px; margin-bottom: 16px; }
+    .forgot a { color: var(--text-3); transition: color 0.2s; }
+    .forgot a:hover { color: var(--text-2); }
+    .bg-glow {
+      position: fixed; top: 20%; left: 50%; transform: translate(-50%,-50%);
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+      pointer-events: none; z-index: -1;
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="auth-wrap">
+  <a href="index.html" class="auth-logo"><span class="nav-logo-dot"></span>InviWine</a>
+  <h1 class="auth-title">Bon retour</h1>
+  <p class="auth-sub">Connectez-vous à votre compte investisseur</p>
+
+  <form id="loginForm" autocomplete="on">
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" id="email" class="form-input" placeholder="vous@exemple.com" autocomplete="email" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mot de passe</label>
+      <input type="password" id="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required />
+    </div>
+    <div class="forgot"><a href="#">Mot de passe oublié ?</a></div>
+    <div id="formError" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none"></div>
+    <button type="submit" class="btn btn-primary btn-full btn-lg" id="submitBtn">
+      Se connecter
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    Pas encore de compte ? <a href="register.html">S'inscrire gratuitement</a>
+  </div>
+</div>
+
+<script src="js/core.js"></script>
+<script>
+(async () => {
+  await IW.loadSupabase();
+  await IW.redirectIfAuth();
+})();
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const errEl = document.getElementById('formError');
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  btn.classList.add('btn-loading');
+  btn.textContent = 'Connexion…';
+  errEl.style.display = 'none';
+
+  try {
+    await IW.signIn(email, password);
+    IW.showToast('Connexion réussie !', 'success');
+    setTimeout(() => window.location.href = 'dashboard.html', 500);
+  } catch (err) {
+    errEl.textContent = err.message === 'Invalid login credentials'
+      ? 'Email ou mot de passe incorrect.'
+      : err.message;
+    errEl.style.display = 'block';
+    btn.classList.remove('btn-loading');
+    btn.textContent = 'Se connecter';
+  }
+});
+</script>
+</body>
+</html>
