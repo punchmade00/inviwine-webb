@@ -12,7 +12,12 @@
       display: flex; align-items: center;
       padding: 120px 0 80px;
       position: relative; overflow: hidden;
+      background-image: url('../hero-bg.jpg');
+      background-size: cover;
+      background-position: center right;
+      background-repeat: no-repeat;
     }
+    
     .hero-glow {
       position: absolute; top: 20%; left: 50%; transform: translate(-50%,-50%);
       width: 600px; height: 600px; border-radius: 50%;
@@ -281,21 +286,21 @@
           <div class="mock-rows-gap">
             <div class="mock-row">
               <div class="mock-row-dot" style="background:#C0392B"></div>
-              <div class="mock-row-name">Pétrus 2015</div>
+              <div class="mock-row-name">🍷 Pétrus 2015</div>
               <svg width="52" height="22"><path d="M0,18 C8,16 14,10 22,8 C30,6 36,12 44,4 C48,2 50,3 52,2" stroke="#22C55E" stroke-width="1.5" fill="none"/></svg>
               <div class="mock-row-price">€3 800</div>
               <div class="mock-row-change up">+35.8%</div>
             </div>
             <div class="mock-row">
               <div class="mock-row-dot" style="background:#8E44AD"></div>
-              <div class="mock-row-name">Romanée-Conti 2019</div>
+              <div class="mock-row-name">🍷 Romanée-Conti 2019</div>
               <svg width="52" height="22"><path d="M0,20 C10,17 16,13 24,9 C32,5 38,7 46,3 C49,1 51,2 52,1" stroke="#22C55E" stroke-width="1.5" fill="none"/></svg>
               <div class="mock-row-price">€18 000</div>
               <div class="mock-row-change up">+45.2%</div>
             </div>
             <div class="mock-row">
               <div class="mock-row-dot" style="background:#2980B9"></div>
-              <div class="mock-row-name">Screaming Eagle 2018</div>
+              <div class="mock-row-name">🍷 Screaming Eagle 2018</div>
               <svg width="52" height="22"><path d="M0,16 C8,18 14,20 22,16 C30,12 38,7 46,4 C49,3 51,3 52,2" stroke="#22C55E" stroke-width="1.5" fill="none"/></svg>
               <div class="mock-row-price">€3 800</div>
               <div class="mock-row-change up">+42.5%</div>
@@ -577,7 +582,17 @@ function filterWines(f, btn) {
   });
   renderMarket();
 }
-function renderMarket() {
+// Emoji par type de vin
+  function getWineEmoji(w) {
+    const name = (w.name + ' ' + (w.region || '')).toLowerCase();
+    if (name.includes('champagne') || name.includes('bollinger') || name.includes('krug') || name.includes('dom pérignon') || name.includes('dom perignon') || name.includes('ruinart') || name.includes('perrier')) return '🥂';
+    if (name.includes('whisky') || name.includes('whiskey') || name.includes('bourbon') || name.includes('scotch')) return '🥃';
+    if (name.includes('cognac') || name.includes('armagnac') || name.includes('brandy')) return '🥃';
+    if (name.includes('porto') || name.includes('port') || name.includes('sherry') || name.includes('madeira')) return '🍾';
+    return '🍷';
+  }
+  
+  function renderMarket() {
   const wines = currentFilter === 'all' ? IW.WINES : IW.WINES.filter(w => w.region === currentFilter);
   const tbody = document.getElementById('marketTableBody');
   tbody.innerHTML = wines.slice(0,8).map(w => {
@@ -589,7 +604,7 @@ function renderMarket() {
         <div style="display:flex;align-items:center;gap:0">
           <span class="region-dot" style="background:${color}"></span>
           <div>
-            <div style="font-weight:600;font-size:14px">${w.name}</div>
+            <div style="font-weight:600;font-size:14px">${getWineEmoji(w)} ${w.name}</div>
             <div style="font-size:12px;color:var(--text-3)">${w.producer} · ${w.region}</div>
           </div>
         </div>
