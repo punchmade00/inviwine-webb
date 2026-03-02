@@ -8,7 +8,7 @@
   --bg-3: #181818;
   --bg-4: #222222;
   --border: #2A2A2A;
-  --border-2: #333333;
+  --border-2: #333333;h
   --gold: #C9A84C;
   --gold-hover: #D4B660;
   --gold-subtle: rgba(201,168,76,0.08);
@@ -73,7 +73,13 @@ input, textarea { font-family: inherit; outline: none; }
   color: var(--text);
   display: flex; align-items: center; gap: 8px;
 }
-.nav-logo-dot { display: inline-block; width: 32px; height: 32px; background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABq0lEQVR4AeyUzU3DQBCFSagCCYkztXCkA0Q5tEAZnGmDIxekNBHM+zY70WY9M8aOJQTC2ufZ+X1v7Tjbix++/gX8/icwDMNWKGvJz+msJwCrSPdCWdUve274BnwPiwUw2AZudNne4maJK73BelgkwBveknh5j5zYIgGQGRgCISCGX3Hb+TV8aiYFMLjFafvBMyLq2Fe8HbL5PRXAwKidXIN9JQ3fdTQnFMDwvgkSYk6ufIrk5iIUEA1yyI+lWe5Y1G1mC+j6XRchBregCX5XwIt67oXZCyFZUyiA923QgFfhTlh9hQJgQj3Q/kl4ENKF4Fp/UufFrCAUoKYbKzKr2ACJ+a2N4rXmutqRCQWo8l0YLRMBYQsKyWF7qO6jj5mfCbCakTUibAsReX9EKUeaHDHPDCBIGLK2UIAavdOUWVGOp0HOUIonbqGA2ndVbWsecSDDnotUgE6yE/r1HJFTOFdQKgCiHgnBLsmFqVSA14UgTgosz17wXpeVhHZKwKXXiQjiIi2L/VKkAjT90xusePiFePVZLBVAI2Q9iK+FSQFrEUVz/r6A6OQW/wIAAP//bTW5EgAAAAZJREFUAwDTo+5BmJsxRAAAAABJRU5ErkJggg==') center/contain no-repeat; vertical-align: middle; }
+.nav-logo-dot {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='%23C9A84C'%3E%3Ccircle cx='16' cy='8' r='3.5'/%3E%3Ccircle cx='10' cy='12.5' r='3.5'/%3E%3Ccircle cx='22' cy='12.5' r='3.5'/%3E%3Ccircle cx='7' cy='19' r='3.5'/%3E%3Ccircle cx='16' cy='15' r='3.5'/%3E%3Ccircle cx='25' cy='19' r='3.5'/%3E%3Ccircle cx='10.5' cy='23' r='3.5'/%3E%3Ccircle cx='21.5' cy='23' r='3.5'/%3E%3Ccircle cx='16' cy='27' r='3'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+  vertical-align: middle;
+}
 .nav-links { display: flex; align-items: center; gap: 32px; }
 .nav-links a { font-size: 14px; color: var(--text-2); transition: color var(--transition); }
 .nav-links a:hover { color: var(--text); }
@@ -365,3 +371,4 @@ input, textarea { font-family: inherit; outline: none; }
   .stats-row { grid-template-columns: 1fr 1fr; }
   .nav-links { display: none; }
 }
+
