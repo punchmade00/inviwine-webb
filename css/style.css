@@ -73,7 +73,7 @@ input, textarea { font-family: inherit; outline: none; }
   color: var(--text);
   display: flex; align-items: center; gap: 8px;
 }
-.nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+.nav-logo-dot { display: inline-block; width: 24px; height: 24px; background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAYCAMAAAAiV0Z6AAAAPFBMVEVLoEN0wU6CzFKCzFKCzFKCzFKCzFJSo0MSczNDmkCCzFJPoUMTczNdr0gmgziCzFITczMTczMTczMTczPh00jOAAAAFHRSTlPF/+bIsms8Ad///hX+//5/tXw7aMEAx10AAACaSURBVHgBbc4HDoRQCATQ33tbvf9dF9QxaCT9UQaltLHOh/golXKhMs5Xqa0xU1lyoa2fXFyQOsDG38qsLy4TaV+sFislovyhPzLJJrBu6eQOtpW0LjbJkzTuTDLRVNKa3uxJI+VdiRqXSeu6GW+Qxi29eLIi8H7EsYrT42BD+mQtNO5JMjRuC4lSY8V4hsLX0egGijvUSEP9AbylEsOkeCgWAAAAAElFTkSuQmCC') center/contain no-repeat; vertical-align: middle; }
 .nav-links { display: flex; align-items: center; gap: 32px; }
 .nav-links a { font-size: 14px; color: var(--text-2); transition: color var(--transition); }
 .nav-links a:hover { color: var(--text); }
