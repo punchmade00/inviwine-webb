@@ -219,7 +219,7 @@
     <a href="/" class="nav-logo"><span class="nav-logo-dot"></span>InviWine</a>
     <div class="nav-links">
       <a href="#features">Fonctionnalités</a>
-      <a href="#market">Marché</a>
+      <a href="marche.html">Marché</a>
       <a href="#pricing">Tarifs</a>
     </div>
     <div class="nav-actions">
@@ -243,7 +243,7 @@
         </p>
         <div class="hero-actions reveal reveal-d3">
           <a href="register.html" class="btn btn-primary btn-lg">Créer un compte gratuit</a>
-          <a href="#market" class="btn btn-secondary btn-lg">Voir le marché</a>
+          <a href="marche.html" class="btn btn-secondary btn-lg">Voir le marché</a>
         </div>
         <div class="hero-trust reveal reveal-d4">
           <div class="hero-trust-item">
@@ -400,7 +400,7 @@
       </table>
     </div>
     <div style="text-align:center;margin-top:24px">
-      <a href="register.html" class="btn btn-secondary">Voir toutes les références →</a>
+      <a href="marche.html" class="btn btn-secondary">Voir toutes les références →</a>
     </div>
   </div>
 </section>
@@ -596,7 +596,7 @@ function filterWines(f, btn) {
     const up = w.change_1y >= 0;
     const color = IW.REGION_COLORS[w.region] || IW.REGION_COLORS.Autres;
     const sparkId = `sp-${w.id}`;
-    return `<tr>
+    return `<tr style="cursor:pointer" onclick="window.location='marche.html'">
       <td>
         <div style="display:flex;align-items:center;gap:0">
           <span class="region-dot" style="background:${color}"></span>
