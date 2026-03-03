@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>InviWine — Mentions légales</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .legal-page { padding: 100px 0 80px; min-height: 100vh; }
+    .legal-container { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+    .legal-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .legal-header .section-label { margin-bottom: 12px; }
+    .legal-header h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 12px; }
+    .legal-header .legal-subtitle { font-size: 15px; color: var(--text-3); }
+    .legal-section { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .legal-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .legal-section h2 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+    .legal-section h2 .section-num { font-size: 11px; font-weight: 700; padding: 3px 8px; background: var(--gold-subtle); border: 1px solid var(--gold-border); color: var(--gold); border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap; }
+    .legal-section p { font-size: 14px; color: var(--text-2); line-height: 1.75; margin-bottom: 12px; }
+    .legal-section p:last-child { margin-bottom: 0; }
+    .legal-info-block { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+    .legal-info-row { display: flex; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .legal-info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .legal-info-label { color: var(--text-3); font-weight: 500; min-width: 200px; flex-shrink: 0; }
+    .legal-info-value { color: var(--text-2); }
+    .legal-info-value a { color: var(--gold); transition: color var(--transition); }
+    .legal-info-value a:hover { color: var(--gold-hover); }
+    .legal-list { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+    .legal-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); line-height: 1.6; }
+    .legal-list li::before { content: '—'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .legal-warning { background: rgba(201,168,76,0.06); border: 1px solid var(--gold-border); border-radius: var(--radius); padding: 16px 20px; margin: 16px 0; }
+    .legal-warning p { color: var(--text-2); font-size: 13px; margin: 0; }
+    .legal-contact-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; font-weight: 600; color: var(--gold); background: var(--gold-subtle); border: 1px solid var(--gold-border); padding: 10px 20px; border-radius: var(--radius-sm); transition: all var(--transition); }
+    .legal-contact-btn:hover { background: rgba(201,168,76,0.15); }
+    @media (max-width: 600px) {
+      .legal-info-row { flex-direction: column; gap: 4px; }
+      .legal-info-label { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="register.html" class="nav-logo"><span class="nav-logo-dot"></span>InviWine</a>
+      <div class="nav-links">
+        <a href="register.html#features">Fonctionnalités</a>
+        <a href="marche.html">Marché</a>
+        <a href="register.html#pricing">Tarifs</a>
+      </div>
+      <div class="nav-actions">
+        <a href="login.html" class="nav-signin">Se connecter</a>
+        <a href="register.html" class="nav-signup">Commencer</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="legal-page">
+    <div class="legal-container">
+
+      <div class="legal-header reveal">
+        <p class="section-label">Informations légales</p>
+        <h1>Mentions légales</h1>
+        <p class="legal-subtitle">Dernière mise à jour : 2025 · InviWine par AREAM</p>
+      </div>
+
+      <!-- 1. Éditeur -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">01</span> Éditeur du site</h2>
+        <p>Le site InviWine est édité et exploité par la société AREAM.</p>
+        <div class="legal-info-block">
+          <div class="legal-info-row"><span class="legal-info-label">Dénomination sociale</span><span class="legal-info-value">AREAM</span></div>
+          <div class="legal-info-row"><span class="legal-info-label">Adresse</span><span class="legal-info-value">186 Chemin de Précoumin, 83340 LE LUC, FRANCE</span></div>
+          <div class="legal-info-row"><span class="legal-info-label">N° SIRET</span><span class="legal-info-value">99536030200013</span></div>
+          <div class="legal-info-row"><span class="legal-info-label">Code NAF</span><span class="legal-info-value">5814Z</span></div>
+          <div class="legal-info-row"><span class="legal-info-label">N° TVA intracommunautaire</span><span class="legal-info-value">FR35995360302</span></div>
+          <div class="legal-info-row"><span class="legal-info-label">Adresse email</span><span class="legal-info-value"><a href="mailto:inviwine@gmail.com">inviwine@gmail.com</a></span></div>
+          <div class="legal-info-row"><span class="legal-info-label">Directeur de la publication</span><span class="legal-info-value">[Nom Prénom]</span></div>
+        </div>
+      </div>
+
+      <!-- 2. Hébergement -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">02</span> Hébergement</h2>
+        <p>Le site est hébergé par :</p>
+        <div class="legal-info-block">
+          <div class="legal-info-row"><span class="legal-info-label">Hébergeur</span><span class="legal-info-value">Vercel</span></div>
+          <div class="legal-info-row"><span class="legal-info-label">Site web</span><span class="legal-info-value"><a href="https://www.inviwine.com/" target="_blank" rel="noopener">https://www.inviwine.com/</a></span></div>
+        </div>
+      </div>
+
+      <!-- 3. Objet -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">03</span> Objet du service</h2>
+        <p>InviWine est une plateforme numérique proposant des outils de suivi, d'agrégation et d'analyse de données relatives au marché des vins fins.</p>
+        <p>Les informations fournies sont à titre purement informatif et analytique. Les fonctionnalités permettent notamment :</p>
+        <ul class="legal-list">
+          <li>le suivi de portefeuille de vins</li>
+          <li>la visualisation de données de marché</li>
+          <li>l'analyse quantitative de références vinicoles</li>
+        </ul>
+      </div>
+
+      <!-- 4. Absence de conseil -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">04</span> Absence de conseil en investissement</h2>
+        <p>InviWine ne fournit en aucun cas :</p>
+        <ul class="legal-list">
+          <li>de conseil en investissement</li>
+          <li>de recommandation d'achat ou de vente</li>
+          <li>de service de gestion de portefeuille</li>
+          <li>de recommandation personnalisée</li>
+        </ul>
+        <div class="legal-warning">
+          <p>Les données, classements, projections et indicateurs disponibles ne constituent pas des conseils financiers. AREAM n'est pas un prestataire de services d'investissement et n'est pas régulée par l'Autorité des marchés financiers (AMF).</p>
+        </div>
+        <p>Les utilisateurs demeurent seuls responsables de leurs décisions.</p>
+        <p>Les performances passées ne préjugent pas des performances futures.</p>
+        <p>L'investissement dans le vin comporte un risque de perte en capital.</p>
+      </div>
+
+      <!-- 5. Responsabilité -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">05</span> Responsabilité</h2>
+        <p>L'éditeur s'efforce de fournir des informations exactes et à jour, mais ne garantit pas l'exactitude, la complétude ou l'actualité des données.</p>
+        <p>AREAM ne pourra être tenue responsable de :</p>
+        <ul class="legal-list">
+          <li>toute perte financière ou dommage découlant de l'utilisation du service</li>
+          <li>toute erreur ou omission dans les données ou analyses</li>
+          <li>l'indisponibilité temporaire ou permanente du service</li>
+        </ul>
+        <p>L'utilisateur reconnaît utiliser la plateforme sous sa seule responsabilité.</p>
+      </div>
+
+      <!-- 6. Accès -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">06</span> Accès au service</h2>
+        <p>Le site est accessible 24h/24 et 7j/7, sauf cas de force majeure ou maintenance. AREAM se réserve le droit de suspendre, limiter ou modifier l'accès au service sans préavis.</p>
+      </div>
+
+      <!-- 7. Propriété intellectuelle -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">07</span> Propriété intellectuelle</h2>
+        <p>L'ensemble du contenu du site (textes, interfaces, graphiques, bases de données, algorithmes, logos, marques, design…) est protégé par le droit de la propriété intellectuelle.</p>
+        <p>Toute reproduction, représentation, modification ou exploitation non autorisée est interdite.</p>
+      </div>
+
+      <!-- 8. Données personnelles -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">08</span> Données personnelles</h2>
+        <p>Conformément au RGPD, les utilisateurs disposent des droits suivants sur leurs données personnelles :</p>
+        <ul class="legal-list">
+          <li>droit d'accès</li>
+          <li>droit de rectification</li>
+          <li>droit d'effacement</li>
+          <li>droit d'opposition</li>
+          <li>droit à la limitation du traitement</li>
+        </ul>
+        <p>Les informations collectées (email, mot de passe, données de portefeuille) sont traitées uniquement pour la fourniture du service et l'exécution du contrat.</p>
+        <p>Pour exercer vos droits ou pour toute question :</p>
+        <a href="mailto:inviwine@gmail.com" class="legal-contact-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          inviwine@gmail.com
+        </a>
+      </div>
+
+      <!-- 9. Cookies -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">09</span> Cookies</h2>
+        <p>Le site peut utiliser des cookies nécessaires au fonctionnement et à la mesure d'audience.</p>
+        <p>Aucun cookie non essentiel n'est installé sans consentement de l'utilisateur.</p>
+      </div>
+
+      <!-- 10. Droit applicable -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">10</span> Droit applicable</h2>
+        <p>Les présentes mentions légales sont soumises au droit français.</p>
+        <p>Tout litige sera porté devant les tribunaux compétents du ressort du siège social d'AREAM.</p>
+      </div>
+
+      <!-- 11. Contact -->
+      <div class="legal-section reveal">
+        <h2><span class="section-num">11</span> Contact</h2>
+        <p>Pour toute question concernant le site ou les mentions légales :</p>
+        <a href="mailto:inviwine@gmail.com" class="legal-contact-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          inviwine@gmail.com
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-name"><span class="nav-logo-dot"></span>InviWine</div>
+          <div class="footer-brand-desc">Le terminal financier du vin d'investissement. Données Liv-ex, analyses quantitatives, suivi de portefeuille.</div>
+        </div>
+        <div class="footer-col">
+          <h4>Produit</h4>
+          <a href="register.html#features">Fonctionnalités</a>
+          <a href="register.html#pricing">Tarifs</a>
+          <a href="marche.html">Marché</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compte</h4>
+          <a href="login.html">Se connecter</a>
+          <a href="register.html">S'inscrire</a>
+        </div>
+        <div class="footer-col">
+          <h4>Légal</h4>
+          <a href="mentions-legales.html">Mentions légales</a>
+          <a href="#">CGU</a>
+          <a href="#">Confidentialité</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2025 InviWine. Tous droits réservés.</span>
+        <span class="footer-disclaimer">InviWine ne fournit aucun conseil en investissement. Les performances passées ne préjugent pas des performances futures. L'investissement dans le vin comporte un risque de perte en capital.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/core.js"></script>
+  <script>
+    IW.initNavScroll();
+    IW.initReveal();
+  </script>
+</body>
+</html>
