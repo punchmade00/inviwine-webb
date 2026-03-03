@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>InviWine — Marché des vins</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .market-page{padding:100px 0 80px;min-height:100vh}
+    .market-page-header{margin-bottom:40px}
+    .market-page-header p{font-size:15px;color:var(--text-2)}
+    .filters-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin-bottom:28px;padding:20px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg)}
+    .filters-bar .search-wrap{flex:1;min-width:200px;position:relative}
+    .filters-bar .search-wrap input{width:100%;background:var(--bg-3);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:10px 14px 10px 38px;font-size:14px;color:var(--text);transition:border-color var(--transition),box-shadow var(--transition)}
+    .filters-bar .search-wrap input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1);outline:none}
+    .filters-bar .search-wrap input::placeholder{color:var(--text-3)}
+    .filters-bar .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--text-3);fill:none;stroke-width:2;pointer-events:none}
+    .filter-select{background:var(--bg-3);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--text-2);cursor:pointer;font-family:inherit;transition:border-color var(--transition),color var(--transition)}
+    .filter-select:focus{outline:none;border-color:var(--gold);color:var(--text)}
+    .filter-select option{background:var(--bg-3)}
+    .filter-group-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;display:block;margin-bottom:6px}
+    .region-pills{display:flex;flex-wrap:wrap;gap:6px}
+    .region-pill{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--border-2);background:transparent;color:var(--text-2);transition:all var(--transition);font-family:inherit}
+    .region-pill:hover{color:var(--text);border-color:var(--text-3)}
+    .region-pill.active{background:var(--gold-subtle);border-color:var(--gold-border);color:var(--gold)}
+    .sort-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+    .sort-bar .results-count{font-size:13px;color:var(--text-3)}
+    .sort-options{display:flex;align-items:center;gap:8px}
+    .sort-label{font-size:12px;color:var(--text-3)}
+    .sort-btn{font-size:12px;font-weight:600;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:inherit;transition:all var(--transition);display:inline-flex;align-items:center;gap:4px}
+    .sort-btn.active{background:var(--bg-3);color:var(--text);border-color:var(--border-2)}
+    .sort-btn:hover:not(.active){color:var(--text);border-color:var(--border-2)}
+    .sort-arrow{font-size:10px}
+    .wines-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:32px}
+    .wine-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;cursor:pointer;transition:border-color var(--transition),transform var(--transition),background var(--transition);text-decoration:none;color:inherit;display:block}
+    .wine-card:hover{border-color:var(--border-2);transform:translateY(-3px);background:var(--bg-3)}
+    .wine-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    .wine-card-left{display:flex;align-items:center;gap:10px}
+    .wine-card-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:2px}
+    .wine-card-name{font-size:15px;font-weight:700;letter-spacing:-0.3px;margin-bottom:3px}
+    .wine-card-sub{font-size:12px;color:var(--text-3)}
+    .wine-card-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+    .wine-card-badge.up{background:var(--green-subtle);color:var(--green)}
+    .wine-card-badge.down{background:var(--red-subtle);color:var(--red)}
+    .wine-card-chart{margin:12px 0;height:44px;display:flex;align-items:center}
+    .wine-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+    .wine-stat{text-align:center}
+    .wine-stat-label{font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:4px}
+    .wine-stat-value{font-size:13px;font-weight:700;color:var(--text)}
+    .view-toggle{display:flex;gap:4px}
+    .view-btn{width:32px;height:32px;border:1px solid var(--border-2);background:transparent;border-radius:var(--radius-sm);color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+    .view-btn:hover{color:var(--text);border-color:var(--text-3)}
+    .view-btn.active{background:var(--bg-3);color:var(--text);border-color:var(--border-2)}
+    .view-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+    .wines-table-wrap{display:none}
+    .wines-grid-wrap{display:block}
+    body.view-table .wines-grid-wrap{display:none}
+    body.view-table .wines-table-wrap{display:block}
+    .no-results{text-align:center;padding:80px 0;color:var(--text-3)}
+    .no-results-icon{font-size:48px;margin-bottom:16px}
+    .no-results-title{font-size:18px;font-weight:600;color:var(--text-2);margin-bottom:8px}
+    .no-results-sub{font-size:14px}
+    .score-badge{font-size:11px;font-weight:700;padding:2px 8px;background:var(--gold-subtle);border:1px solid var(--gold-border);color:var(--gold);border-radius:20px}
+    @media(max-width:768px){.filters-bar{flex-direction:column;align-items:stretch}.wines-grid{grid-template-columns:1fr}.sort-bar{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="register.html" class="nav-logo"><span class="nav-logo-dot"></span>InviWine</a>
+      <div class="nav-links">
+        <a href="register.html#features">Fonctionnalités</a>
+        <a href="marche.html" style="color:var(--gold)">Marché</a>
+        <a href="register.html#pricing">Tarifs</a>
+      </div>
+      <div class="nav-actions">
+        <a href="login.html" class="nav-signin">Se connecter</a>
+        <a href="register.html" class="nav-signup">Commencer</a>
+      </div>
+    </div>
+  </nav>
+  <main class="market-page">
+    <div class="container">
+      <div class="market-page-header reveal">
+        <p class="section-label">Marché en direct</p>
+        <h1 class="section-title" style="font-size:clamp(28px,4vw,48px)">Analyses de bouteilles</h1>
+        <p>Explorez l'intégralité de nos références — filtrez, comparez et identifiez les meilleures opportunités d'investissement.</p>
+      </div>
+      <div class="filters-bar reveal reveal-d1">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Rechercher un vin, producteur..."/>
+        </div>
+        <div>
+          <span class="filter-group-label">Région</span>
+          <div class="region-pills" id="regionPills">
+            <button class="region-pill active" data-region="all">Toutes</button>
+            <button class="region-pill" data-region="Bordeaux">Bordeaux</button>
+            <button class="region-pill" data-region="Bourgogne">Bourgogne</button>
+            <button class="region-pill" data-region="Champagne">Champagne</button>
+            <button class="region-pill" data-region="Rhône">Rhône</button>
+            <button class="region-pill" data-region="Italie">Italie</button>
+            <button class="region-pill" data-region="Napa">Napa</button>
+          </div>
+        </div>
+        <div>
+          <span class="filter-group-label">Prix / btl</span>
+          <select class="filter-select" id="priceFilter">
+            <option value="all">Tous les prix</option>
+            <option value="0-500">Moins de 500€</option>
+            <option value="500-1500">500€ — 1 500€</option>
+            <option value="1500-5000">1 500€ — 5 000€</option>
+            <option value="5000-99999">Plus de 5 000€</option>
+          </select>
+        </div>
+        <div>
+          <span class="filter-group-label">Millésime</span>
+          <select class="filter-select" id="vintageFilter">
+            <option value="all">Tous</option>
+            <option value="2019-2023">2019 — 2023</option>
+            <option value="2015-2018">2015 — 2018</option>
+            <option value="2010-2014">2010 — 2014</option>
+            <option value="2000-2009">2000 — 2009</option>
+          </select>
+        </div>
+        <div>
+          <span class="filter-group-label">Performance</span>
+          <select class="filter-select" id="perfFilter">
+            <option value="all">Toutes</option>
+            <option value="top">Top performers (&gt;30%)</option>
+            <option value="good">Solide (10%–30%)</option>
+            <option value="stable">Stable (&lt;10%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="sort-bar reveal reveal-d2">
+        <span class="results-count" id="resultsCount">16 références</span>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="sort-options">
+            <span class="sort-label">Trier :</span>
+            <button class="sort-btn active" data-sort="change_1y" id="sort-change_1y">12M <span class="sort-arrow" id="arr-change_1y">↓</span></button>
+            <button class="sort-btn" data-sort="current_price" id="sort-current_price">Prix <span class="sort-arrow" id="arr-current_price">↓</span></button>
+            <button class="sort-btn" data-sort="change_1m" id="sort-change_1m">1M <span class="sort-arrow" id="arr-change_1m">↓</span></button>
+            <button class="sort-btn" data-sort="vintage" id="sort-vintage">Millésime <span class="sort-arrow" id="arr-vintage">↓</span></button>
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn active" id="viewGrid" title="Vue grille"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+            <button class="view-btn" id="viewTable" title="Vue tableau"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="wines-grid-wrap"><div class="wines-grid" id="winesGrid"></div></div>
+      <div class="wines-table-wrap">
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>VIN</th><th>MILLÉSIME</th><th>TENDANCE 12M</th><th>PRIX / BTL</th><th>1 MOIS</th><th>12 MOIS</th><th>SCORE</th></tr></thead><tbody id="winesTableBody"></tbody></table></div>
+      </div>
+      <div class="no-results" id="noResults" style="display:none"><div class="no-results-icon">🍷</div><div class="no-results-title">Aucune référence trouvée</div><div class="no-results-sub">Essayez de modifier vos filtres</div></div>
+      <div style="text-align:center;padding:48px 0 0;border-top:1px solid var(--border);margin-top:16px" class="reveal">
+        <p class="section-label" style="margin-bottom:12px">Investissez intelligemment</p>
+        <h2 style="font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-0.5px;margin-bottom:12px">Suivez ces vins en temps réel</h2>
+        <p style="font-size:15px;color:var(--text-2);margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto">Créez votre compte gratuit pour accéder aux graphiques complets, alertes prix et suivi de portefeuille.</p>
+        <a href="register.html" class="btn btn-primary btn-lg">Créer un compte gratuit →</a>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div><div class="footer-brand-name"><span class="nav-logo-dot"></span>InviWine</div><div class="footer-brand-desc">Le terminal financier du vin d'investissement. Données Liv-ex, analyses quantitatives, suivi de portefeuille.</div></div>
+        <div class="footer-col"><h4>Produit</h4><a href="register.html#features">Fonctionnalités</a><a href="register.html#pricing">Tarifs</a><a href="marche.html">Marché</a><a href="dashboard.html">Dashboard</a></div>
+        <div class="footer-col"><h4>Compte</h4><a href="login.html">Se connecter</a><a href="register.html">S'inscrire</a></div>
+        <div class="footer-col"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">CGU</a><a href="#">Confidentialité</a><a href="#">Contact</a></div>
+      </div>
+      <div class="footer-bottom"><span class="footer-copy">© 2025 InviWine. Tous droits réservés.</span><span class="footer-disclaimer">Les performances passées ne préjugent pas des performances futures. L'investissement dans le vin comporte des risques de perte en capital.</span></div>
+    </div>
+  </footer>
+  <script src="js/core.js"></script>
+  <script>
+    IW.initNavScroll();IW.initReveal();
+    var cR='all',cS='change_1y',sA=false,sQ='',cP='all',cV='all',cPf='all';
+    function emoji(w){var n=(w.name+' '+(w.region||'')).toLowerCase();if(n.includes('champagne')||n.includes('krug')||n.includes('salon'))return'🥂';return'🍷';}
+    function filterW(){
+      var w=IW.WINES.slice();
+      if(sQ){var q=sQ.toLowerCase();w=w.filter(function(x){return x.name.toLowerCase().includes(q)||x.producer.toLowerCase().includes(q)||x.region.toLowerCase().includes(q);});}
+      if(cR!=='all')w=w.filter(function(x){return x.region===cR;});
+      if(cP!=='all'){var p=cP.split('-').map(Number);w=w.filter(function(x){return x.current_price>=p[0]&&x.current_price<=p[1];});}
+      if(cV!=='all'){var v=cV.split('-').map(Number);w=w.filter(function(x){return x.vintage>=v[0]&&x.vintage<=v[1];});}
+      if(cPf==='top')w=w.filter(function(x){return x.change_1y>30;});
+      else if(cPf==='good')w=w.filter(function(x){return x.change_1y>=10&&x.change_1y<=30;});
+      else if(cPf==='stable')w=w.filter(function(x){return x.change_1y<10;});
+      w.sort(function(a,b){return sA?a[cS]-b[cS]:b[cS]-a[cS];});
+      return w;
+    }
+    function rGrid(wines){
+      var g=document.getElementById('winesGrid');
+      if(!wines.length){g.innerHTML='';document.getElementById('noResults').style.display='';return;}
+      document.getElementById('noResults').style.display='none';
+      g.innerHTML=wines.map(function(w){
+        var up=w.change_1y>=0,col=IW.REGION_COLORS[w.region]||IW.REGION_COLORS.Autres,sid='gs-'+w.id;
+        return '<a class="wine-card" href="register.html"><div class="wine-card-top"><div class="wine-card-left"><div class="wine-card-dot" style="background:'+col+'"></div><div><div class="wine-card-name">'+emoji(w)+' '+w.name+'</div><div class="wine-card-sub">'+w.producer+' · '+w.region+' · '+w.vintage+'</div></div></div><span class="wine-card-badge '+(up?'up':'down')+'">'+IW.fmtPct(w.change_1y)+'</span></div><div class="wine-card-chart"><span id="'+sid+'" class="sparkline"></span></div><div class="wine-card-stats"><div class="wine-stat"><div class="wine-stat-label">Prix</div><div class="wine-stat-value">'+IW.fmtEur(w.current_price)+'</div></div><div class="wine-stat"><div class="wine-stat-label">1 Mois</div><div class="wine-stat-value '+(w.change_1m>=0?'up':'down')+'">'+IW.fmtPct(w.change_1m)+'</div></div><div class="wine-stat"><div class="wine-stat-label">Score</div><div class="wine-stat-value" style="color:var(--gold)">'+w.score+'</div></div></div></a>';
+      }).join('');
+      wines.forEach(function(w){var el=document.getElementById('gs-'+w.id);if(el)IW.drawSparkline(el,w.spark,w.change_1y>=0,120,36);});
+    }
+    function rTable(wines){
+      var tb=document.getElementById('winesTableBody');
+      if(!wines.length){tb.innerHTML='';return;}
+      tb.innerHTML=wines.map(function(w){
+        var up=w.change_1y>=0,col=IW.REGION_COLORS[w.region]||IW.REGION_COLORS.Autres,sid='ts-'+w.id;
+        return '<tr style="cursor:pointer" onclick="location.href=\'register.html\'"><td><div style="display:flex;align-items:center"><span class="region-dot" style="background:'+col+'"></span><div><div style="font-weight:600;font-size:14px">'+emoji(w)+' '+w.name+'</div><div style="font-size:12px;color:var(--text-3)">'+w.producer+' · '+w.region+'</div></div></div></td><td><span style="font-size:13px;color:var(--text-2)">'+w.vintage+'</span></td><td><span id="'+sid+'" class="sparkline"></span></td><td><span style="font-weight:600;font-size:14px">'+IW.fmtEur(w.current_price)+'</span></td><td><span class="'+(up?'up':'down')+'" style="font-weight:600;font-size:13px">'+IW.fmtPct(w.change_1m)+'</span></td><td><span class="'+(up?'up':'down')+'" style="font-weight:700;font-size:14px">'+IW.fmtPct(w.change_1y)+'</span></td><td><span class="score-badge">'+w.score+'</span></td></tr>';
+      }).join('');
+      wines.forEach(function(w){var el=document.getElementById('ts-'+w.id);if(el)IW.drawSparkline(el,w.spark,w.change_1y>=0);});
+    }
+    function render(){var w=filterW();document.getElementById('resultsCount').textContent=w.length+' référence'+(w.length>1?'s':'');rGrid(w);rTable(w);}
+    document.getElementById('regionPills').addEventListener('click',function(e){var b=e.target.closest('.region-pill');if(!b)return;document.querySelectorAll('.region-pill').forEach(function(x){x.classList.remove('active');});b.classList.add('active');cR=b.dataset.region;render();});
+    document.getElementById('searchInput').addEventListener('input',function(e){sQ=e.target.value.trim();render();});
+    document.getElementById('priceFilter').addEventListener('change',function(e){cP=e.target.value;render();});
+    document.getElementById('vintageFilter').addEventListener('change',function(e){cV=e.target.value;render();});
+    document.getElementById('perfFilter').addEventListener('change',function(e){cPf=e.target.value;render();});
+    document.querySelectorAll('.sort-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.dataset.sort;
+        if(cS===k)sA=!sA;else{cS=k;sA=false;}
+        document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.remove('active');document.getElementById('arr-'+b.dataset.sort).textContent='↓';});
+        btn.classList.add('active');document.getElementById('arr-'+k).textContent=sA?'↑':'↓';render();
+      });
+    });
+    document.getElementById('viewGrid').addEventListener('click',function(){document.body.classList.remove('view-table');document.getElementById('viewGrid').classList.add('active');document.getElementById('viewTable').classList.remove('active');});
+    document.getElementById('viewTable').addEventListener('click',function(){document.body.classList.add('view-table');document.getElementById('viewTable').classList.add('active');document.getElementById('viewGrid').classList.remove('active');});
+    render();
+  </script>
+</body>
+</html>
