@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-      <meta charset="UTF-8"/>
-      <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<head>
+
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0">
       <title>InviWine — Tarifs</title>
-    <link rel="stylesheet" href="css/style.css"/>
-    <link rel="icon" href="logo.png" type="image/png"/>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="logo.png" type="image/png">
     <style>
           .pricing-page { padding: 120px 0 80px; min-height: 100vh; }
           .pricing-page-header { text-align: center; margin-bottom: 64px; }
@@ -29,10 +30,72 @@
                   .pricing-grid-page { grid-template-columns: 1fr; max-width: 420px; }
           }
         </style>
-  </head>
-  <body>
-      <!-- NAV -->
-      <nav class="nav" id="nav">
+  
+<title>Tarifs — InviWine</title>
+<style>
+.tarifs-hero{padding:120px 0 60px;text-align:center;position:relative;overflow:hidden}
+.tarifs-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(201,168,76,0.07) 0%,transparent 65%);pointer-events:none}
+.tarifs-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--gold);background:var(--gold-subtle);border:1px solid var(--gold-border);padding:5px 14px;border-radius:20px;margin-bottom:20px;text-transform:uppercase}
+.billing-toggle{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:60px}
+.billing-lbl{font-size:14px;font-weight:600;color:var(--text-2);cursor:pointer;transition:color .2s}
+.billing-lbl.active{color:var(--text)}
+.toggle-sw{width:48px;height:26px;background:var(--bg-3);border:1px solid var(--border);border-radius:13px;cursor:pointer;position:relative;transition:background .2s}
+.toggle-sw.annual{background:var(--gold-subtle);border-color:var(--gold-border)}
+.toggle-knob{width:20px;height:20px;background:var(--text-3);border-radius:50%;position:absolute;top:2px;left:2px;transition:all .25s}
+.toggle-sw.annual .toggle-knob{left:26px;background:var(--gold)}
+.annual-badge{font-size:11px;font-weight:700;color:#4CAF50;background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.25);padding:2px 8px;border-radius:10px}
+.pricing-grid-t{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:860px;margin:0 auto 80px}
+.pricing-card-t{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;position:relative;transition:border-color .2s,transform .2s}
+.pricing-card-t:hover{transform:translateY(-2px)}
+.pricing-card-t.featured-t{border-color:var(--gold-border);background:linear-gradient(145deg,rgba(201,168,76,0.05) 0%,var(--bg-2) 60%)}
+.popular-tag-t{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#000;background:var(--gold);padding:4px 16px;border-radius:0 0 10px 10px}
+.plan-tier-t{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+.plan-tier-t.gold{color:var(--gold)}
+.plan-price-t{font-size:52px;font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:4px}
+.plan-price-t sup{font-size:22px;font-weight:600;letter-spacing:0;vertical-align:top;margin-top:12px;display:inline-block}
+.plan-price-t.gold{color:var(--gold)}
+.plan-billing-t{font-size:13px;color:var(--text-3);margin-bottom:28px}
+.plan-divider-t{height:1px;background:var(--border);margin-bottom:24px}
+.feat-list-t{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.feat-item-t{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-2)}
+.feat-chk{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.feat-chk.green{color:#4CAF50}
+.feat-chk.gold{color:var(--gold)}
+.feat-cx{color:var(--text-3);font-size:16px;margin-top:-1px}
+.btn-fw{width:100%;text-align:center;display:block}
+.value-strip-t{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin:0 auto 80px;max-width:900px}
+.value-cell-t{background:var(--bg-2);padding:28px 24px;text-align:center}
+.value-icon-t{font-size:28px;margin-bottom:10px}
+.value-title-t{font-size:14px;font-weight:700;margin-bottom:6px}
+.value-desc-t{font-size:12px;color:var(--text-3);line-height:1.5}
+.compare-tbl-t{width:100%;border-collapse:collapse;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.compare-tbl-t th{padding:20px 24px;text-align:left;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);background:var(--bg-3);border-bottom:1px solid var(--border)}
+.compare-tbl-t th.center{text-align:center}
+.compare-tbl-t th.gold-col{background:rgba(201,168,76,0.06);color:var(--gold)}
+.compare-tbl-t td{padding:14px 24px;font-size:14px;color:var(--text-2);border-bottom:1px solid rgba(42,42,42,0.5)}
+.compare-tbl-t td.center{text-align:center}
+.compare-tbl-t td.gold-col{background:rgba(201,168,76,0.03)}
+.compare-tbl-t tr:last-child td{border-bottom:none}
+.cat-row td{padding:10px 24px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text-3);background:var(--bg-3);border-top:1px solid var(--border)}
+.ck-g{color:#4CAF50;font-size:18px;font-weight:700}
+.ck-gold{color:var(--gold);font-size:18px;font-weight:700}
+.cx-t{color:var(--text-3);font-size:16px}
+.roi-card-t{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px;max-width:700px;margin:0 auto;text-align:center}
+.roi-calc-t{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin-bottom:32px}
+.roi-num-t{font-size:42px;font-weight:800;letter-spacing:-2px;color:var(--gold);line-height:1;margin-bottom:6px}
+.faq-item-t{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.faq-q-t{padding:20px 24px;font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:color .2s}
+.faq-q-t:hover{color:var(--gold)}
+.faq-q-t svg{width:16px;height:16px;stroke:var(--text-3);fill:none;stroke-width:2;transition:transform .2s;flex-shrink:0}
+.faq-item-t.open .faq-q-t svg{transform:rotate(180deg)}
+.faq-a-t{padding:0 24px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
+.faq-item-t.open .faq-a-t{max-height:250px;padding-bottom:20px}
+.faq-a-t p{font-size:14px;color:var(--text-2);line-height:1.7}
+@media(max-width:760px){.pricing-grid-t{grid-template-columns:1fr}.value-strip-t{grid-template-columns:1fr 1fr}.roi-calc-t{grid-template-columns:1fr}.faq-grid-t{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav">
             <div class="nav-inner">
                     <a href="register.html" class="nav-logo"><span class="nav-logo-dot"></span>InviWine</a>
                     <div class="nav-links">
@@ -47,91 +110,224 @@
             </div>
       </nav>
 
-      <!-- PRICING PAGE -->
-      <section class="pricing-page">
-            <div class="container">
-                    <div class="pricing-page-header">
-                              <p class="section-label reveal">Tarifs</p>
-                              <h1 class="reveal">Simple et transparent</h1>
-                              <p class="reveal">Commencez gratuitement, passez premium quand vous êtes prêt. Sans engagement.</p>
-                    </div>
+<!-- HERO -->
+<section class="tarifs-hero">
+  <div class="tarifs-hero-bg"></div>
+  <div class="container">
+    <div class="tarifs-badge reveal">💎 Tarification simple</div>
+    <h1 class="reveal" style="font-size:clamp(38px,6vw,68px);font-weight:800;letter-spacing:-2.5px;line-height:1.05;margin-bottom:20px">Investissez dans<br><span style="color:var(--gold)">votre analyse,</span><br>pas dans vos frais.</h1>
+    <p class="reveal" style="font-size:18px;color:var(--text-2);max-width:520px;margin:0 auto 48px;line-height:1.7">Un plan gratuit complet pour démarrer. Un plan Premium pour aller plus loin.<br>Sans engagement, sans frais caché.</p>
 
-                    <div class="pricing-grid-page">
-                              <!-- Free -->
-                              <div class="pricing-card reveal">
-                                          <div class="pricing-name">Gratuit</div>
-                                          <div class="pricing-amount"><sup>€</sup>0</div>
-                                        <div class="pricing-period">pour toujours</div>
-                                        <div class="pricing-features">
-                                                    <div class="pricing-feat"><span class="pricing-check">✓</span>Accès aux 200+ vins</div>
-                                                    <div class="pricing-feat"><span class="pricing-check">✓</span>Suivi de portfolio</div>
-                                                    <div class="pricing-feat"><span class="pricing-check">✓</span>Graphiques 1A</div>
-                                                    <div class="pricing-feat"><span class="pricing-check">✓</span>Filtres et recherche</div>
-                                        </div>
-                                        <a href="register.html" class="btn btn-secondary btn-full">Commencer gratuitement</a>
-                              </div>
-                    
-                            <!-- Premium Mensuel -->
-                            <div class="pricing-card featured reveal reveal-d1">
-                                      <div class="pricing-badge">LE PLUS POPULAIRE</div>
-                                      <div class="pricing-name">Premium Mensuel</div>
-                                      <div class="pricing-amount"><sup>€</sup>15<span style="font-size:26px;font-weight:500;letter-spacing:0">,99</span></div>
-                                      <div class="pricing-period">par mois · sans engagement</div>
-                                      <div class="pricing-features">
-                                                  <div class="pricing-feat"><span class="pricing-check">✓</span>Tout le plan gratuit</div>
-                                                  <div class="pricing-feat"><span class="pricing-check">✓</span>Historique complet 5 ans</div>
-                                                  <div class="pricing-feat"><span class="pricing-check">✓</span>Heatmap millésimes</div>
-                                                  <div class="pricing-feat"><span class="pricing-check">✓</span>Projection de valeur 5 ans</div>
-                                                  <div class="pricing-feat"><span class="pricing-check">✓</span>Alertes prix illimitées</div>
-                                                  <div class="pricing-feat"><span class="pricing-check">✓</span>Score de liquidité</div>
-                                      </div>
-                                      <a href="register.html" class="btn btn-primary btn-full">Commencer l'essai →</a>
-                            </div>
-                    </div>
-            
-                  <p class="pricing-note reveal">Paiement sécurisé par Stripe · Annulation à tout moment · Aucun frais caché</p>
-            </div>
-      </section>
-  
-    <!-- FOOTER -->
-    <footer>
-          <div class="container">
-                  <div class="footer-grid">
-                            <div>
-                                        <div class="footer-brand-name"><span class="nav-logo-dot"></span>InviWine</div>
-                                        <div class="footer-brand-desc">Le terminal financier du vin d'investissement. Données Liv-ex, analyses quantitatives, suivi de portefeuille.</div>
-                            </div>
-                            <div class="footer-col">
-                                        <h4>Produit</h4>
-                                      <a href="register.html#features">Fonctionnalités</a>
-                                      <a href="tarifs.html">Tarifs</a>
-                                      <a href="marche.html">Marché</a>
-                                      <a href="dashboard.html">Dashboard</a>
-                            </div>
-                          <div class="footer-col">
-                                    <h4>Compte</h4>
-                                    <a href="login.html">Se connecter</a>
-                                    <a href="register.html">S'inscrire</a>
-                          </div>
-                          <div class="footer-col">
-                                    <h4>Légal</h4>
-                                    <a href="mentions-legales.html">Mentions légales</a>
-                                    <a href="#">CGU</a>
-                                    <a href="#">Confidentialité</a>
-                                    <a href="#">Contact</a>
-                          </div>
-                  </div>
-                <div class="footer-bottom">
-                        <span class="footer-copy">© 2025 InviWine. Tous droits réservés.</span>
-                        <span class="footer-disclaimer">InviWine ne fournit aucun conseil en investissement. Les performances passées ne préjugent pas des performances futures. L'investissement dans le vin comporte un risque de perte en capital.</span>
-                </div>
-          </div>
-    </footer>
-  
-    <script src="js/core.js"></script>
-    <script>
-          IW.initNavScroll();
-          IW.initReveal();
-    </script>
-  </body>
+    <!-- Toggle mensuel/annuel -->
+    <div class="billing-toggle reveal">
+      <span class="billing-lbl active" id="lbl-monthly">Mensuel</span>
+      <div class="toggle-sw" id="billingToggle" onclick="toggleBilling()"><div class="toggle-knob"></div></div>
+      <span class="billing-lbl" id="lbl-annual">Annuel <span class="annual-badge">−20%</span></span>
+    </div>
+
+    <!-- Pricing cards -->
+    <div class="pricing-grid-t">
+      <div class="pricing-card-t reveal">
+        <div class="plan-tier-t">Gratuit</div>
+        <div class="plan-price-t"><sup>€</sup>0</div>
+        <div class="plan-billing-t">pour toujours · aucune carte requise</div>
+        <div class="plan-divider-t"></div>
+        <div class="feat-list-t">
+          <div class="feat-item-t"><svg class="feat-chk green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Accès aux 200+ références Liv-ex</div>
+          <div class="feat-item-t"><svg class="feat-chk green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Graphiques de prix historique 1 an</div>
+          <div class="feat-item-t"><svg class="feat-chk green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Suivi de portefeuille (positions illimitées)</div>
+          <div class="feat-item-t"><svg class="feat-chk green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Filtres et recherche avancée</div>
+          <div class="feat-item-t"><svg class="feat-chk green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Index & classements par performance</div>
+          <div class="feat-item-t" style="opacity:.4"><span class="feat-cx">✕</span>&nbsp;Historique complet 5 ans</div>
+          <div class="feat-item-t" style="opacity:.4"><span class="feat-cx">✕</span>&nbsp;Alertes prix & notifications email</div>
+          <div class="feat-item-t" style="opacity:.4"><span class="feat-cx">✕</span>&nbsp;Heatmap millésimes interactive</div>
+        </div>
+        <a href="signup.html" class="btn btn-secondary btn-full btn-fw">Commencer gratuitement</a>
+      </div>
+      <div class="pricing-card-t featured-t reveal reveal-d1">
+        <div class="popular-tag-t">⭐ LE PLUS POPULAIRE</div>
+        <div class="plan-tier-t gold">Premium</div>
+        <div class="plan-price-t gold" id="premiumPrice"><sup>€</sup>15<span style="font-size:32px;letter-spacing:-1px">,99</span></div>
+        <div class="plan-billing-t" id="premiumBilling">par mois · sans engagement</div>
+        <div class="plan-divider-t"></div>
+        <div class="feat-list-t">
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><strong>Tout le plan gratuit inclus</strong></div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Historique complet 5 ans (Liv-ex 100)</div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Heatmap millésimes — qualité × performance</div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Alertes prix illimitées (email instantané)</div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Projection de valeur 5 ans par position</div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Score de liquidité par référence</div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Rapport PDF mensuel personnalisé</div>
+          <div class="feat-item-t"><svg class="feat-chk gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Export données (CSV / JSON)</div>
+        </div>
+        <a href="fonctionnalites.html" class="btn btn-primary btn-full btn-fw" style="margin-bottom:12px">Voir toutes les fonctionnalités →</a>
+        <p style="font-size:12px;color:var(--text-3);text-align:center">Paiement sécurisé · Annulation à tout moment</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE STRIP -->
+<section><div class="container">
+  <div class="value-strip-t reveal">
+    <div class="value-cell-t"><div class="value-icon-t">🔒</div><div class="value-title-t">Sans engagement</div><div class="value-desc-t">Annulez à tout moment, sans frais ni préavis</div></div>
+    <div class="value-cell-t"><div class="value-icon-t">📊</div><div class="value-title-t">Données Liv-ex</div><div class="value-desc-t">La bourse de référence mondiale du vin d'investissement</div></div>
+    <div class="value-cell-t"><div class="value-icon-t">💳</div><div class="value-title-t">Paiement sécurisé</div><div class="value-desc-t">Powered by Stripe — norme PCI DSS niveau 1</div></div>
+    <div class="value-cell-t"><div class="value-icon-t">🎯</div><div class="value-title-t">Gratuit pour démarrer</div><div class="value-desc-t">Aucune carte requise pour le plan gratuit</div></div>
+  </div>
+</div></section>
+
+<!-- COMPARISON TABLE -->
+<section style="padding:80px 0;border-top:1px solid var(--border)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px" class="reveal">
+      <h2 style="font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;margin-bottom:12px">Comparez les fonctionnalités</h2>
+      <p style="font-size:16px;color:var(--text-2)">Tout ce qu'il vous faut pour piloter vos investissements vinicoles</p>
+    </div>
+    <div class="reveal" style="border-radius:var(--radius-lg);overflow:hidden">
+    <table class="compare-tbl-t">
+      <thead>
+        <tr>
+          <th style="width:55%">Fonctionnalité</th>
+          <th class="center" style="width:22.5%">Gratuit</th>
+          <th class="center gold-col" style="width:22.5%">✦ Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-row"><td colspan="3">📊 Données de marché</td></tr>
+        <tr><td>Accès aux 200+ références Liv-ex</td><td class="center"><span class="ck-g">✓</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Graphiques de prix — historique 1 an</td><td class="center"><span class="ck-g">✓</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Historique complet 5 ans (Liv-ex 100)</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr class="cat-row"><td colspan="3">💼 Gestion de portefeuille</td></tr>
+        <tr><td>Suivi de positions (illimité)</td><td class="center"><span class="ck-g">✓</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>ROI automatique par bouteille</td><td class="center"><span class="ck-g">✓</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Projection de valeur sur 5 ans</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr class="cat-row"><td colspan="3">🔔 Outils avancés</td></tr>
+        <tr><td>Index & classements (filtres multi-critères)</td><td class="center"><span class="ck-g">✓</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Score de liquidité par référence</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Heatmap millésimes (qualité × performance)</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Alertes prix illimitées (email)</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Rapport PDF mensuel personnalisé</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+        <tr><td>Export données (CSV / JSON)</td><td class="center"><span class="cx-t">—</span></td><td class="center gold-col"><span class="ck-gold">✓</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section style="padding:80px 0;border-top:1px solid var(--border)">
+  <div class="container">
+    <div class="roi-card-t reveal">
+      <div class="tarifs-badge">🧮 Calculateur de valeur</div>
+      <h2 style="font-size:clamp(22px,3vw,34px);font-weight:800;letter-spacing:-1.5px;margin-bottom:12px">À combien revient le Premium<br>par rapport à votre cave ?</h2>
+      <p style="font-size:15px;color:var(--text-2);margin-bottom:36px;line-height:1.6">Pour un portefeuille vinicole moyen, le plan Premium coûte moins de <strong style="color:var(--gold)">0,04%</strong> de la valeur de votre cave par mois.</p>
+      <div class="roi-calc-t">
+        <div><div class="roi-num-t">€15,99</div><div style="font-size:13px;color:var(--text-3)">Premium / mois</div></div>
+        <div style="font-size:32px;color:var(--text-3)">→</div>
+        <div><div class="roi-num-t" id="roiPerDay">€0,53</div><div style="font-size:13px;color:var(--text-3)">par jour</div></div>
+      </div>
+      <div style="margin-bottom:24px">
+        <label style="font-size:13px;color:var(--text-2);display:block;margin-bottom:8px">Valeur estimée de votre cave : <strong id="caveVal" style="color:var(--gold)">50 000 €</strong></label>
+        <input type="range" id="caveSlider" min="5000" max="500000" step="5000" value="50000" style="width:100%;accent-color:var(--gold)" oninput="updateROI(this.value)">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-top:4px"><span>5 000€</span><span>500 000€</span></div>
+      </div>
+      <div id="roiResult" style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--text-2);line-height:1.7">Pour une cave de <strong style="color:var(--gold)">50 000€</strong>, le Premium représente <strong style="color:var(--gold)">0.032%</strong> de votre valeur — moins que les frais de transaction d'une simple revente.</div>
+      <p style="font-size:12px;color:var(--text-3);margin-top:14px">* Calcul indicatif à titre informatif uniquement. InviWine ne fournit aucun conseil en investissement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section style="padding:60px 0;border-top:1px solid var(--border);text-align:center">
+  <div class="container">
+    <p style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3);margin-bottom:28px">Conçu pour les investisseurs sérieux</p>
+    <div style="display:flex;justify-content:center;align-items:center;gap:40px;flex-wrap:wrap">
+      <span style="font-size:14px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:8px">📊 Données Liv-ex 100</span>
+      <span style="font-size:14px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:8px">🔐 Paiement Stripe</span>
+      <span style="font-size:14px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:8px">🌍 Marchés mondiaux</span>
+      <span style="font-size:14px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:8px">📱 Interface moderne</span>
+      <span style="font-size:14px;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:8px">⚡ Mises à jour continues</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:80px 0;border-top:1px solid var(--border)">
+  <div class="container">
+    <h2 class="reveal" style="font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-1.5px;text-align:center;margin-bottom:48px">Questions sur les tarifs</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto" class="faq-grid-t">
+      <div class="faq-item-t reveal" onclick="this.classList.toggle('open')"><div class="faq-q-t">Puis-je annuler à tout moment ?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="faq-a-t"><p>Oui, sans engagement ni frais. Annulez depuis votre compte. Votre accès Premium reste actif jusqu'à la fin de la période payée.</p></div></div>
+      <div class="faq-item-t reveal" onclick="this.classList.toggle('open')"><div class="faq-q-t">Le plan gratuit est-il vraiment gratuit ?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="faq-a-t"><p>Oui, à vie. Aucune carte requise. Accès aux 200+ références Liv-ex, graphiques 1 an et outils de base sans limite de durée.</p></div></div>
+      <div class="faq-item-t reveal" onclick="this.classList.toggle('open')"><div class="faq-q-t">La facturation annuelle existe-t-elle ?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="faq-a-t"><p>Oui, avec −20% en optant pour la facturation annuelle : environ 152€/an au lieu de 192€. Un seul paiement, sans frais supplémentaires.</p></div></div>
+      <div class="faq-item-t reveal" onclick="this.classList.toggle('open')"><div class="faq-q-t">Comment sont traitées mes données de paiement ?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="faq-a-t"><p>Via Stripe, certifié PCI DSS niveau 1. InviWine ne stocke jamais vos coordonnées bancaires.</p></div></div>
+      <div class="faq-item-t reveal" onclick="this.classList.toggle('open')"><div class="faq-q-t">Puis-je passer du gratuit au Premium ?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="faq-a-t"><p>Oui, à tout moment depuis votre espace compte. Accès Premium activé instantanément dès confirmation du paiement.</p></div></div>
+      <div class="faq-item-t reveal" onclick="this.classList.toggle('open')"><div class="faq-q-t">Y a-t-il un essai gratuit du Premium ?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="faq-a-t"><p>Le plan gratuit est déjà une excellente base. Vous pouvez upgrader et annuler dans les 7 jours si vous n'êtes pas satisfait.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name"><span class="nav-logo-dot"></span>InviWine</div>
+        <div class="footer-brand-desc">Le terminal financier du vin d'investissement. Données Liv-ex, analyses quantitatives, suivi de portefeuille.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Produit</h4>
+        <a href="fonctionnalites.html">Fonctionnalités</a>
+        <a href="tarifs.html">Tarifs</a>
+        <a href="marche.html">Marché</a>
+        <a href="dashboard.html">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Compte</h4>
+        <a href="login.html">Se connecter</a>
+        <a href="signup.html">S'inscrire</a>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="#">CGU</a>
+        <a href="#">Confidentialité</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 InviWine. Tous droits réservés.</span>
+      <span class="footer-disclaimer">InviWine ne fournit aucun conseil en investissement. Les performances passées ne préjugent pas des performances futures. L'investissement dans le vin comporte un risque de perte en capital. L'utilisateur reste seul responsable de ses décisions.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/core.js"></script>
+<script>
+IW.initNavScroll();
+IW.initReveal();
+let isAnnual = false;
+function toggleBilling() {
+  isAnnual = !isAnnual;
+  const tog = document.getElementById('billingToggle');
+  const lm = document.getElementById('lbl-monthly');
+  const la = document.getElementById('lbl-annual');
+  const pp = document.getElementById('premiumPrice');
+  const pb = document.getElementById('premiumBilling');
+  if (isAnnual) {
+    tog.classList.add('annual'); lm.classList.remove('active'); la.classList.add('active');
+    pp.innerHTML = '<sup>€</sup>12<span style="font-size:32px;letter-spacing:-1px">,79</span>';
+    pb.textContent = 'par mois · facturé annuellement · économisez 20%';
+  } else {
+    tog.classList.remove('annual'); lm.classList.add('active'); la.classList.remove('active');
+    pp.innerHTML = '<sup>€</sup>15<span style="font-size:32px;letter-spacing:-1px">,99</span>';
+    pb.textContent = 'par mois · sans engagement';
+  }
+}
+function updateROI(v) {
+  const val = parseInt(v);
+  document.getElementById('caveVal').textContent = val.toLocaleString('fr-FR') + ' €';
+  const pct = ((15.99 / val) * 100).toFixed(3);
+  document.getElementById('roiResult').innerHTML = 'Pour une cave de <strong style="color:var(--gold)">' + val.toLocaleString('fr-FR') + '€</strong>, le Premium représente <strong style="color:var(--gold)">' + pct + '%</strong> de votre valeur — ' + (val > 100000 ? 'soit moins que les frais de stockage d'une semaine en chai professionnel.' : 'moins que les frais de transaction sur une simple revente.');
+}
+</script>
+</body>
 </html>
