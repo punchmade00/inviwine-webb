@@ -101,12 +101,19 @@ function initNavScroll() {
 }
 
 function initReveal() {
-  const els = document.querySelectorAll('.reveal');
-  if (!els.length) return;
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
-  }, { threshold: 0.08 });
-  els.forEach(el => observer.observe(el));
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    const observer = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(el => observer.observe(el));
+    // Fallback: force visibility for elements already in viewport
+    requestAnimationFrame(() => {
+          els.forEach(el => {
+                  const r = el.getBoundingClientRect();
+                  if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('in');
+          });
+    });
 }
 
 function drawSparkline(container, data, isUp, w = 80, h = 32) {
