@@ -318,6 +318,15 @@ footer { border-top: 1px solid var(--border); padding: 60px 0 32px; }
 <script>
 IW.initNavScroll();
 IW.initReveal();
+      // Fix reveal: forcer la visibilité des éléments déjà dans le viewport
+      setTimeout(function() {
+              document.querySelectorAll('.reveal').forEach(function(el) {
+                        var rect = el.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                                    el.classList.add('in');
+                        }
+              });
+      }, 100);
 let isAnnual = false;
 function toggleBilling() {
   isAnnual = !isAnnual;
